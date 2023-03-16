@@ -1,0 +1,37 @@
+import axios from "axios"
+import { toast } from "react-toastify"
+const checkAuth = () => {
+  /*  Getting token value stored in localstorage, if token is not present we will open login page 
+      for all internal dashboard routes  */
+  const TOKEN = localStorage.getItem("token")
+  const PUBLIC_ROUTES = ["login", "forgot-password", "register", "documentation", "verify"]
+  const isPublicPage = PUBLIC_ROUTES.some(r => window.location.href.includes(r))
+  if (!TOKEN && !isPublicPage) {
+    window.location.href = '/login'
+    return;
+  } else {
+    console.log("i am geting logged guys")
+    axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
+    axios.interceptors.request.use(function (config) {
+      // UPDATE: Add this code to show global loading indicator
+      document.body.classList.add('loading-indicator');
+      return config
+    }, function (error) {
+      return Promise.reject(error);
+    });
+    axios.interceptors.response.use(function (response) {
+      // UPDATE: Add this code to hide global loading indicator
+      console.log("i am in response")
+      document.body.classList.remove('loading-indicator');
+      return response;
+    }, function (error) {
+      console.log("i am in error")
+      document.body.classList.remove('loading-indicator');
+      console.log(error)
+      if (error.response)
+        return Promise.reject(error);
+    });
+    return TOKEN
+  }
+}
+export default checkAuth

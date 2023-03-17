@@ -22,7 +22,7 @@ const login = async (userData) => {
 // Logout User
 const logout = async () => {
     const response = await axios.get(API_URL + "logout");
-    return response.data.message;
+    return response.data;
 };
 // Get Login Status
 const getLoginStatus = async () => {
@@ -42,19 +42,19 @@ const updateUser = async (userData) => {
 // Send Verification Email
 const sendVerificationEmail = async () => {
     const response = await axios.post(API_URL + "sendVerificationEmail");
-    return response.data.message;
+    return response.data;
 };
 // Verify User
 const verifyUser = async (verificationToken) => {
     const response = await axios.patch(
         `${API_URL}verifyUser/${verificationToken}`
     );
-    return response;
+    return response.data;
 };
 // Change Password
 const changePassword = async (userData) => {
     const response = await axios.patch(API_URL + "changePassword", userData);
-    return response.data.message;
+    return response.data;
 };
 // Reset Password
 const resetPassword = async (userData, resetToken) => {
@@ -62,12 +62,12 @@ const resetPassword = async (userData, resetToken) => {
         `${API_URL}resetPassword/${resetToken}`,
         userData
     );
-    return response.data.message;
+    return response.data;
 };
 // fORGOT Password
 const forgotPassword = async (userData) => {
     const response = await axios.post(API_URL + "forgotPassword", userData);
-    return response.data.message;
+    return response.data;
 };
 // Get Users
 const getUsers = async () => {
@@ -77,17 +77,17 @@ const getUsers = async () => {
 // Delete User
 const deleteUser = async (id) => {
     const response = await axios.delete(API_URL + id);
-    return response.data.message;
+    return response.data;
 };
 // Upgrade User
 const upgradeUser = async (userData) => {
     const response = await axios.post(API_URL + "upgradeUser", userData);
-    return response.data.message;
+    return response.data;
 };
 // Send Login Code
 const sendLoginCode = async (email) => {
     const response = await axios.post(API_URL + `sendLoginCode/${email}`);
-    return response.data.message;
+    return response.data;
 };
 // Login With Code
 const loginWithCode = async (code, email) => {

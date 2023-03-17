@@ -10,7 +10,6 @@ const checkAuth = () => {
     window.location.href = '/login'
     return;
   } else {
-    console.log("i am geting logged guys")
     axios.defaults.headers.common['Authorization'] = `Bearer ${TOKEN}`
     axios.interceptors.request.use(function (config) {
       // UPDATE: Add this code to show global loading indicator
@@ -21,15 +20,12 @@ const checkAuth = () => {
     });
     axios.interceptors.response.use(function (response) {
       // UPDATE: Add this code to hide global loading indicator
-      console.log("i am in response")
       document.body.classList.remove('loading-indicator');
       return response;
     }, function (error) {
-      console.log("i am in error")
-      document.body.classList.remove('loading-indicator');
       console.log(error)
-      if (error.response)
-        return Promise.reject(error);
+      document.body.classList.remove('loading-indicator');
+      return Promise.reject(error);
     });
     return TOKEN
   }

@@ -8,25 +8,26 @@ const Verify = () => {
     const dispatch = useDispatch()
     const [message, setMessage] = useState('Verifying Your account')
     const { token } = useParams();
-    const { isSuccess } = useSelector(
+    const { isSuccess, isError } = useSelector(
         (state) => state.auth
     );
-    console.log(token)
     useEffect(() => {
         const userVerification = async () => {
             await dispatch(verifyUser(token))
-            if (isSuccess) {
-                setMessage("Your verification has been completed!")
-                setTimeout(() => {
-                    window.location.href = '/app/welcome'
-                }, 5000);
-            }
-            else {
-                setMessage("Invalid")
-            }
         }
         userVerification()
     }, [])
+    useEffect(() => {
+        if (isSuccess === true) {
+            setMessage("Your verification has been completed!")
+            setTimeout(() => {
+                window.location.href = '/app/welcome'
+            }, 5000);
+        }
+        else {
+            setMessage("Couldnot verify token")
+        }
+    }, [isSuccess, dispatch])
     return (
         <div className="alert alert-success shadow-lg">
             <div>

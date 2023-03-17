@@ -19,11 +19,11 @@ function Register() {
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [registerObj, setRegisterObj] = useState(INITIAL_REGISTER_OBJ)
-    const { isLoading, isLoggedIn, isSuccess, message } = useSelector(
+    const { isSuccess } = useSelector(
         (state) => state.auth
     );
     useEffect(() => {
-        if (isSuccess && isLoggedIn) {
+        if (isSuccess) {
             navigate("/login");
         }
         dispatch(RESET());

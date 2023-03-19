@@ -450,8 +450,8 @@ const authSlice = createSlice({
             .addCase(resetPassword.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.message;
-                toast.error(action.payload.message);
+                state.message = action.payload;
+                toast.error(action.payload);
             })
             // getUsers
             .addCase(getUsers.pending, (state) => {

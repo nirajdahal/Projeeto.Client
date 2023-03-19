@@ -7,12 +7,13 @@ import checkAuth from './app/auth';
 import initializeApp from './app/init';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import LoginWithCode from './features/user/LoginWithCode';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 // Importing pages
 const Layout = lazy(() => import('./containers/Layout'))
 const Login = lazy(() => import('./pages/Login'))
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const LoginWithCode = lazy(() => import('./pages/LoginWithCode'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
 const Register = lazy(() => import('./pages/Register'))
 const Verify = lazy(() => import('./pages/Verify'))
 const Documentation = lazy(() => import('./pages/Documentation'))
@@ -44,10 +45,11 @@ function App() {
         <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/register" element={<Register />} />
             <Route path="/verify/:token" element={<Verify />} />
             <Route path="/loginWithCode" element={<LoginWithCode />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/resetPassword/:resetToken" element={<ResetPassword />} />
             <Route path="/documentation" element={<Documentation />} />
             {/* Place new routes over this */}
             <Route path="/app/*" element={<Layout />} />

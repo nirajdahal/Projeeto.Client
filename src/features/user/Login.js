@@ -72,9 +72,10 @@ function Login() {
                             </div>
                             <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
                             <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Login</button>
-                            <button className={"btn mt-2 w-full btn-secondary" + (loading ? " loading" : "")}>
+                            <button className={"btn mt-2 w-full btn-dark" + (loading ? " loading" : "")}>
                                 <GoogleLogin
-                                    style={{ backgroundColor: 'red', color: 'white', fontSize: 16 }}
+                                    type="icon"
+                                    shape='pill'
                                     onSuccess={googleLogin}
                                     onError={() => {
                                         console.log("Login Failed");

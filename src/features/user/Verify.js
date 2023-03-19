@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { verifyUser } from './slice/authSlice';
+import { RESET, verifyUser } from './slice/authSlice';
 const Verify = () => {
     const dispatch = useDispatch()
     const [message, setMessage] = useState('Verifying Your account')
@@ -18,16 +18,17 @@ const Verify = () => {
         userVerification()
     }, [])
     useEffect(() => {
-        if (isSuccess === true) {
+        if (isSuccess) {
             setMessage("Your verification has been completed!")
             setTimeout(() => {
                 window.location.href = '/app/welcome'
-            }, 5000);
+            }, 5000)
         }
-        else {
+        if (isError) {
             setMessage("Couldnot verify token")
         }
-    }, [isSuccess, dispatch])
+        dispatch(RESET())
+    }, [isSuccess, isError])
     return (
         <div className="alert alert-success shadow-lg">
             <div>

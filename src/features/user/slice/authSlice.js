@@ -290,6 +290,7 @@ const authSlice = createSlice({
                 state.isLoggedIn = true;
                 state.message = action.payload.message
                 state.user = action.payload.data;
+                console.log("login val", action.payload.message)
                 toast.success(action.payload.message);
             })
             .addCase(login.rejected, (state, action) => {
@@ -433,8 +434,8 @@ const authSlice = createSlice({
             .addCase(forgotPassword.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.message;
-                toast.error(action.payload.message);
+                state.message = action.payload;
+                toast.error(action.payload);
             })
             // resetPassword
             .addCase(resetPassword.pending, (state) => {

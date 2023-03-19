@@ -1,72 +1,93 @@
-import {useState, useRef} from 'react'
-import {Link} from 'react-router-dom'
+import { useState, useRef } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import LandingIntro from './LandingIntro'
-import ErrorText from  '../../components/Typography/ErrorText'
+import ErrorText from '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
-
-function Login(){
-
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { login, loginWithGoogle, RESET } from './slice/authSlice'
+import { GoogleLogin } from '@react-oauth/google'
+import { toast } from 'react-toastify'
+function Login() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const INITIAL_LOGIN_OBJ = {
-        password : "",
-        emailId : ""
+        password: "",
+        email: ""
     }
-
+    const { isSuccess, isError, user, twoFactor } = useSelector(
+        (state) => state.auth
+    )
+    useEffect(() => {
+        if (twoFactor && isError) {
+            //redirect to login with code
+            navigate('/loginWithCode')
+        }
+        if (isSuccess && !isError && user) {
+            localStorage.setItem("token", user.token)
+            setTimeout(() => {
+                navigate('/app/welcome')
+            }, 2000);
+        }
+    }, [isSuccess, isError, twoFactor])
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [loginObj, setLoginObj] = useState(INITIAL_LOGIN_OBJ)
-
-    const submitForm = (e) =>{
+    const submitForm = async (e) => {
         e.preventDefault()
         setErrorMessage("")
-
-        if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is required! (use any value)")
-        if(loginObj.password.trim() === "")return setErrorMessage("Password is required! (use any value)")
-        else{
+        if (loginObj.email.trim() === "") return setErrorMessage("Email Id is required! (use any value)")
+        if (loginObj.password.trim() === "") return setErrorMessage("Password is required! (use any value)")
+        else {
             setLoading(true)
-            // Call API to check user credentials and save token in localstorage
-            localStorage.setItem("token", "DumyTokenHere")
+            await dispatch(login(loginObj))
             setLoading(false)
-            window.location.href = '/app/welcome'
         }
     }
-
-    const updateFormValue = ({updateType, value}) => {
+    const updateFormValue = ({ updateType, value }) => {
         setErrorMessage("")
-        setLoginObj({...loginObj, [updateType] : value})
+        setLoginObj({ ...loginObj, [updateType]: value })
     }
-
-    return(
+    const googleLogin = async (credentialResponse) => {
+        console.log(credentialResponse);
+        await dispatch(
+            loginWithGoogle({ userToken: credentialResponse.credential })
+        );
+    };
+    return (
         <div className="min-h-screen bg-base-200 flex items-center">
             <div className="card mx-auto w-full max-w-5xl  shadow-xl">
                 <div className="grid  md:grid-cols-2 grid-cols-1  bg-base-100 rounded-xl">
-                <div className=''>
+                    <div className=''>
                         <LandingIntro />
+                    </div>
+                    <div className='py-24 px-10'>
+                        <h2 className='text-2xl font-semibold mb-2 text-center'>Login</h2>
+                        <form onSubmit={(e) => submitForm(e)}>
+                            <div className="mb-4">
+                                <InputText type="email" defaultValue={loginObj.email} updateType="email" containerStyle="mt-4" labelTitle="Email Id" updateFormValue={updateFormValue} />
+                                <InputText defaultValue={loginObj.password} type="password" updateType="password" containerStyle="mt-4" labelTitle="Password" updateFormValue={updateFormValue} />
+                            </div>
+                            <div className='text-right text-primary'><Link to="/forgot-password"><span className="text-sm  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Forgot Password?</span></Link>
+                            </div>
+                            <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
+                            <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Login</button>
+                            <button className={"btn mt-2 w-full btn-secondary" + (loading ? " loading" : "")}>
+                                <GoogleLogin
+                                    style={{ backgroundColor: 'red', color: 'white', fontSize: 16 }}
+                                    onSuccess={googleLogin}
+                                    onError={() => {
+                                        console.log("Login Failed");
+                                        toast.error("Login Failed");
+                                    }}
+                                />
+                            </button >
+                            <div className='text-center mt-4'>Don't have an account yet? <Link to="/register"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Register</span></Link></div>
+                        </form>
+                    </div>
                 </div>
-                <div className='py-24 px-10'>
-                    <h2 className='text-2xl font-semibold mb-2 text-center'>Login</h2>
-                    <form onSubmit={(e) => submitForm(e)}>
-
-                        <div className="mb-4">
-
-                            <InputText type="emailId" defaultValue={loginObj.emailId} updateType="emailId" containerStyle="mt-4" labelTitle="Email Id" updateFormValue={updateFormValue}/>
-
-                            <InputText defaultValue={loginObj.password} type="password" updateType="password" containerStyle="mt-4" labelTitle="Password" updateFormValue={updateFormValue}/>
-
-                        </div>
-
-                        <div className='text-right text-primary'><Link to="/forgot-password"><span className="text-sm  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Forgot Password?</span></Link>
-                        </div>
-
-                        <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
-                        <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Login</button>
-
-                        <div className='text-center mt-4'>Don't have an account yet? <Link to="/register"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Register</span></Link></div>
-                    </form>
-                </div>
-            </div>
             </div>
         </div>
     )
 }
-
 export default Login

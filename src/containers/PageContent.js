@@ -23,12 +23,6 @@ function PageContent() {
         <div className="drawer-content flex flex-col ">
             <Header />
             <main className="flex-1 overflow-y-auto pt-8 px-6  bg-base-200" ref={mainContentRef}>
-                {isLoggedIn && <span className="text-secondary text-center">
-                    <p>Please check your email to verify your account.</p>
-                    <p> Resend Verification:  <button className="btn btn-success btn-link btn-xs mt-2">
-                        Send
-                    </button> </p>
-                </span>}
                 <Suspense fallback={<SuspenseContent />}>
                     <Routes>
                         {

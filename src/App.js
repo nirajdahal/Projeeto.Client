@@ -44,14 +44,16 @@ function App() {
       <Router>
         <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/verify/:token" element={<Verify />} />
-            <Route path="/loginWithCode" element={<LoginWithCode />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/resetPassword/:resetToken" element={<ResetPassword />} />
-            <Route path="/documentation" element={<Documentation />} />
-            {/* Place new routes over this */}
+            {!token && (<>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/verify/:token" element={<Verify />} />
+              <Route path="/loginWithCode" element={<LoginWithCode />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/resetPassword/:resetToken" element={<ResetPassword />} />
+              <Route path="/documentation" element={<Documentation />} />
+            </>)
+              /* Place new routes over this */}
             <Route path="/app/*" element={<Layout />} />
             <Route path="*" element={<Navigate to={token ? "/app/welcome" : "/login"} replace />} />
           </Routes>

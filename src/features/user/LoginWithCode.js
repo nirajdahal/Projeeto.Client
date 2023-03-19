@@ -28,6 +28,7 @@ function LoginWithCode() {
         console.log(twoFactor)
         if (!twoFactor) {
             navigate('/app/welcome')
+            dispatch(RESET())
         }
         if (isSuccess & !isError) {
             console.log("hey send code was successfull")
@@ -37,7 +38,9 @@ function LoginWithCode() {
         if (isSuccess & !isError && user) {
             window.location.href = '/app/welcome'
             localStorage.setItem("token", user.token)
+            localStorage.setItem("user", JSON.stringify(user))
             console.log("hey login with code was successfull")
+            dispatch(RESET())
         }
     }, [isSuccess, isError, user, dispatch])
     const submitgetLoginCodeForm = async (e) => {

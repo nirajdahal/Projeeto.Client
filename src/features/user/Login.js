@@ -25,10 +25,12 @@ function Login() {
         }
         if (isSuccess && !isError && user) {
             localStorage.setItem("token", user.token)
+            localStorage.setItem("user", JSON.stringify(user))
             setTimeout(() => {
                 navigate('/app/welcome')
             }, 2000);
         }
+        dispatch(RESET())
     }, [isSuccess, isError, twoFactor])
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")

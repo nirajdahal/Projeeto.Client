@@ -16,55 +16,68 @@ const DocComponents = lazy(() => import('../pages/DocComponents'))
 const routes = [
   {
     path: '/dashboard', // the url
-    component: Dashboard, // view rendered
+    component: Dashboard,
+    isAccessible: ['admin', 'project-manager', 'team'] // view rendered
   },
   {
     path: '/welcome', // the url
-    component: Welcome, // view rendered
+    component: Welcome,
+    isAccessible: ['admin', 'project-manager', 'team', "user"] // view rendered
   },
   {
     path: '/leads',
     component: Leads,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/settings-team',
     component: Team,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/settings-profile',
     component: ProfileSettings,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/settings-billing',
     component: Bills,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/getting-started',
     component: GettingStarted,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/features',
     component: DocFeatures,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/components',
     component: DocComponents,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/integration',
     component: Integration,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/charts',
     component: Charts,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/404',
     component: Page404,
+    isAccessible: ['admin', 'project-manager']
   },
   {
     path: '/blank',
     component: Blank,
+    isAccessible: ['admin', 'project-manager']
   },
 ]
 export default routes

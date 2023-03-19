@@ -1,15 +1,32 @@
 import routes from '../routes/sidebar'
 import { NavLink, Routes, Link, useLocation } from 'react-router-dom'
 import SidebarSubmenu from './SidebarSubmenu';
-import { useSelector } from 'react-redux';
+import jwt_decode from "jwt-decode";
 import { useEffect } from 'react';
+import { useState } from 'react';
+const token = localStorage.getItem('token')
 function LeftSidebar() {
+    const [filterRoutes, setFiltereRoutes] = useState(routes)
     const location = useLocation();
-    const { isLoggedIn, user } = useSelector(
-        (state) => state.auth
-    )
     useEffect(() => {
-    })
+        const decodedToken = jwt_decode(token)
+        console.log(decodedToken.role)
+        setFiltereRoutes(filterRoutesByRole(routes, decodedToken.role))
+    }, [])
+    function filterRoutesByRole(routesToFilter, role) {
+        return routesToFilter.filter(route => {
+            if (route.isAccessible.includes(role)) {
+                if (route.submenu) {
+                    route.submenu = route.submenu.filter(submenuItem => {
+                        return submenuItem.isAccessible.includes(role)
+                    })
+                    return route.submenu.length > 0
+                }
+                return true
+            }
+            return false
+        })
+    }
     return (
         <div className="drawer-side ">
             <label htmlFor="left-sidebar-drawer" className="drawer-overlay"></label>
@@ -17,7 +34,7 @@ function LeftSidebar() {
                 <li className="mb-2 font-semibold text-xl">
                     <Link to={'/app/welcome'}><img className="mask mask-squircle w-10" src="/logo192.png" alt="DashWind Logo" />DashWind</Link> </li>
                 {
-                    routes.map((route, k) => {
+                    filterRoutes.map((route, k) => {
                         return (
                             <li className="" key={k}>
                                 {

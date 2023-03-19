@@ -1,17 +1,37 @@
 import Header from "./Header"
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import pagesRoutes from '../routes/index'
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
 import routes from '../routes'
 import { Suspense, lazy } from 'react'
 import SuspenseContent from "./SuspenseContent"
 import { useSelector } from 'react-redux'
+import jwt_decode from "jwt-decode";
 import { useEffect, useRef } from "react"
 const Page404 = lazy(() => import('../pages/protected/404'))
+const token = localStorage.getItem('token')
 function PageContent() {
+    const location = useLocation();
+    let currentPath = location.pathname;
     const mainContentRef = useRef(null);
     const { pageTitle } = useSelector(state => state.header)
-    const { isLoggedIn } = useSelector(
-        (state) => state.auth
-    );
+    currentPath = currentPath.replace('/app', '')
+    const accesibleRoles = getRouteWithCurrentPath(currentPath)[0].isAccessible
+    const decodedToken = jwt_decode(token)
+    const isAccessible = checkIsAccessibleByRole(accesibleRoles, decodedToken.role)
+    if (!isAccessible) {
+        window.location.href = "/app/welcome"
+    }
+    function getRouteWithCurrentPath(path) {
+        return pagesRoutes.filter(route => route.path === path);
+    }
+    function checkIsAccessibleByRole(roles, role) {
+        if (roles.includes(role)) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
     // Scroll back to top on new page load
     useEffect(() => {
         mainContentRef.current.scroll({

@@ -17,67 +17,67 @@ const routes = [
   {
     path: '/dashboard', // the url
     component: Dashboard,
-    isAccessible: ['admin', 'project-manager', 'team'] // view rendered
+    isAccessible: ['admin', 'manager', 'team'] // view rendered
   },
   {
     path: '/welcome', // the url
     component: Welcome,
-    isAccessible: ['admin', 'project-manager', 'team', "user"] // view rendered
+    isAccessible: ['admin', 'manager', 'team', "user"] // view rendered
   },
   {
     path: '/leads',
     component: Leads,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/settings-team',
     component: Team,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin']
   },
   {
     path: '/settings-profile',
     component: ProfileSettings,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin']
   },
   {
     path: '/settings-billing',
     component: Bills,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/getting-started',
     component: GettingStarted,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/features',
     component: DocFeatures,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/components',
     component: DocComponents,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/integration',
     component: Integration,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/charts',
     component: Charts,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/404',
     component: Page404,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
   {
     path: '/blank',
     component: Blank,
-    isAccessible: ['admin', 'project-manager']
+    isAccessible: ['admin', 'manager']
   },
 ]
 export default routes

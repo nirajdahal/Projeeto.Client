@@ -492,14 +492,14 @@ const authSlice = createSlice({
             .addCase(upgradeUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.message = action.payload.message;
+                state.message = "role-update";
                 toast.success(action.payload.message);
             })
             .addCase(upgradeUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.message;
-                toast.error(action.payload.message);
+                state.message = action.payload;
+                toast.error(action.payload);
             })
             // send Login Code
             .addCase(sendLoginCode.pending, (state) => {

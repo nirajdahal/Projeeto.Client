@@ -25,61 +25,61 @@ const routes = [
     path: '/app/dashboard',
     icon: <Squares2X2Icon className={iconClasses} />,
     name: 'Dashboard',
-    isAccessible: ['admin', 'project-manager', 'team']
+    isAccessible: ['admin', 'manager', 'team']
   },
   {
     path: '/app/leads', // url
     icon: <InboxArrowDownIcon className={iconClasses} />, // icon component
     name: 'Leads', // name that appear in Sidebar
-    isAccessible: ['admin', 'project-manager', 'team']
+    isAccessible: ['admin', 'manager', 'team']
   },
   {
     path: '/app/charts', // url
     icon: <ChartBarIcon className={iconClasses} />, // icon component
     name: 'Charts', // name that appear in Sidebar
-    isAccessible: ['admin', 'project-manager', 'team']
+    isAccessible: ['admin', 'manager', 'team']
   },
   {
     path: '/app/integration', // url
     icon: <BoltIcon className={iconClasses} />, // icon component
     name: 'Integration', // name that appear in Sidebar
-    isAccessible: ['admin', 'project-manager', 'team']
+    isAccessible: ['admin', 'manager', 'team']
   },
   {
     path: '', //no url needed as this has submenu
     icon: <DocumentDuplicateIcon className={`${iconClasses} inline`} />, // icon component
     name: 'Pages', // name that appear in Sidebar
-    isAccessible: ['admin', 'project-manager', 'team', 'user'],
+    isAccessible: ['admin', 'manager', 'team', 'user'],
     submenu: [
       {
         path: '/login',
         icon: <ArrowRightOnRectangleIcon className={submenuIconClasses} />,
         name: 'Login',
-        isAccessible: ['admin', 'project-manager', 'team', 'user']
+        isAccessible: ['admin', 'manager', 'team', 'user']
       },
       {
         path: '/register', //url
         icon: <UserIcon className={submenuIconClasses} />, // icon component
         name: 'Register', // name that appear in Sidebar
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
       {
         path: '/forgot-password',
         icon: <KeyIcon className={submenuIconClasses} />,
         name: 'Forgot Password',
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
       {
         path: '/app/blank',
         icon: <DocumentIcon className={submenuIconClasses} />,
         name: 'Blank Page',
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
       {
         path: '/app/404',
         icon: <ExclamationTriangleIcon className={submenuIconClasses} />,
         name: '404',
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
     ]
   },
@@ -87,25 +87,25 @@ const routes = [
     path: '', //no url needed as this has submenu
     icon: <Cog6ToothIcon className={`${iconClasses} inline`} />, // icon component
     name: 'Settings', // name that appear in Sidebar
-    isAccessible: ['admin', 'project-manager', 'team'],
+    isAccessible: ['admin', 'manager', 'team'],
     submenu: [
       {
         path: '/app/settings-profile', //url
         icon: <UserIcon className={submenuIconClasses} />, // icon component
         name: 'Profile', // name that appear in Sidebar
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
       {
         path: '/app/settings-billing',
         icon: <WalletIcon className={submenuIconClasses} />,
         name: 'Billing',
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
       {
         path: '/app/settings-team', // url
         icon: <UsersIcon className={submenuIconClasses} />, // icon component
         name: 'Team Members', // name that appear in Sidebar
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin']
       },
     ]
   },
@@ -113,25 +113,25 @@ const routes = [
     path: '', //no url needed as this has submenu
     icon: <DocumentTextIcon className={`${iconClasses} inline`} />, // icon component
     name: 'Documentation', // name that appear in Sidebar
-    isAccessible: ['admin', 'project-manager', 'team'],
+    isAccessible: ['admin', 'manager', 'team'],
     submenu: [
       {
         path: '/app/getting-started', // url
         icon: <DocumentTextIcon className={submenuIconClasses} />, // icon component
         name: 'Getting Started', // name that appear in Sidebar
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
       {
         path: '/app/features',
         icon: <TableCellsIcon className={submenuIconClasses} />,
         name: 'Features',
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       },
       {
         path: '/app/components',
         icon: <CodeBracketSquareIcon className={submenuIconClasses} />,
         name: 'Components',
-        isAccessible: ['admin', 'project-manager', 'team']
+        isAccessible: ['admin', 'manager', 'team']
       }
     ]
   },

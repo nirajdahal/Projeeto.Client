@@ -6,6 +6,7 @@ import InputText from '../../components/Input/InputText'
 import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon'
 import { useEffect } from 'react'
 import { login, loginWithCode, RESET, sendLoginCode } from './slice/authSlice'
+import { io } from "socket.io-client"
 import { useDispatch, useSelector } from 'react-redux'
 function LoginWithCode() {
     const dispatch = useDispatch()
@@ -40,6 +41,9 @@ function LoginWithCode() {
             localStorage.setItem("token", user.token)
             localStorage.setItem("user", JSON.stringify(user))
             console.log("hey login with code was successfull")
+            setTimeout(() => {
+                navigate('/app/welcome')
+            }, 2000);
             dispatch(RESET())
         }
     }, [isSuccess, isError, user, dispatch])

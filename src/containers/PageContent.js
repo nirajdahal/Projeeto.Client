@@ -7,6 +7,7 @@ import SuspenseContent from "./SuspenseContent"
 import { useSelector } from 'react-redux'
 import jwt_decode from "jwt-decode";
 import { useEffect, useRef } from "react"
+import { initializeSocket } from "../socket/Socket"
 const Page404 = lazy(() => import('../pages/protected/404'))
 const token = localStorage.getItem('token')
 function PageContent() {

@@ -4,9 +4,11 @@ import modalSlice from '../features/common/modalSlice'
 import rightDrawerSlice from '../features/common/rightDrawerSlice'
 import leadsSlice from '../features/leads/leadSlice'
 import authReducer from "../features/user/slice/authSlice"
+import notificationReducer from "../features/common/slice/NotificationSlice"
 const combinedReducer = {
   header: headerSlice,
   auth: authReducer,
+  notification: notificationReducer,
   rightDrawer: rightDrawerSlice,
   modal: modalSlice,
   lead: leadsSlice

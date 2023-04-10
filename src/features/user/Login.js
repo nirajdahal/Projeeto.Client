@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { login, loginWithGoogle, RESET } from './slice/authSlice'
 import { GoogleLogin } from '@react-oauth/google'
 import { toast } from 'react-toastify'
+import { io } from "socket.io-client"
 function Login() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -29,8 +30,8 @@ function Login() {
             setTimeout(() => {
                 navigate('/app/welcome')
             }, 2000);
+            dispatch(RESET())
         }
-        dispatch(RESET())
     }, [isSuccess, isError, twoFactor])
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
@@ -78,6 +79,7 @@ function Login() {
                                 <GoogleLogin
                                     type="icon"
                                     shape='pill'
+                                    className='cursor: pointer'
                                     onSuccess={googleLogin}
                                     onError={() => {
                                         console.log("Login Failed");

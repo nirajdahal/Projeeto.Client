@@ -9,10 +9,19 @@ import { openRightDrawer } from '../features/common/rightDrawerSlice';
 import { RIGHT_DRAWER_TYPES } from '../utils/globalConstantUtil'
 import { NavLink, Routes, Link, useLocation } from 'react-router-dom'
 import { RESET } from '../features/user/slice/authSlice'
+import { getNotifications, readNotifications } from '../features/common/slice/NotificationSlice'
+import { initializeSocket, socketGetNotifications } from '../socket/Socket'
 function Header() {
     const dispatch = useDispatch()
     const { noOfNotifications, pageTitle } = useSelector(state => state.header)
     const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme"))
+    const [userProfile, setUserProfile] = useState({
+        name: "user",
+        photo: "user"
+    })
+    const { notifications } = useSelector(
+        (state) => state.notification
+    )
     useEffect(() => {
         themeChange(false)
         if (currentTheme === null) {
@@ -24,9 +33,24 @@ function Header() {
         }
         // 👆 false parameter is required for react project
     }, [])
+    useEffect(() => {
+        console.log("user notification from header called")
+        const user = JSON.parse(localStorage.getItem('user'))
+        const token = localStorage.getItem('token')
+        setUserProfile(user)
+        dispatch(getNotifications(user._id))
+        console.log("user_", user)
+        initializeSocket(token, user)
+        socketGetNotifications(user, dispatch)
+    }, [])
     // Opening right sidebar for notification
     const openNotification = () => {
         dispatch(openRightDrawer({ header: "Notifications", bodyType: RIGHT_DRAWER_TYPES.NOTIFICATION }))
+        const unreadNotification = notifications.filter((n) => n.read === false)
+        console.log("unread notification", unreadNotification)
+        if (unreadNotification.length > 0) {
+            dispatch(readNotifications())
+        }
     }
     function logoutUser() {
         localStorage.clear()
@@ -59,20 +83,32 @@ function Header() {
                         <MoonIcon data-set-theme="dark" data-act-class="ACTIVECLASS" className={"fill-current w-6 h-6 " + (currentTheme === "light" ? "swap-on" : "swap-off")} />
                     </label>
                     {/* Notification icon */}
-                    <button className="btn btn-ghost ml-4  btn-circle" onClick={() => openNotification()}>
-                        <div className="indicator">
-                            <BellIcon className="h-6 w-6" />
-                            {noOfNotifications > 0 ? <span className="indicator-item badge badge-secondary badge-sm">{noOfNotifications}</span> : null}
-                        </div>
-                    </button>
+                    {notifications &&
+                        <button className="btn btn-ghost ml-4  btn-circle" onClick={() => openNotification()}>
+                            <div className="indicator">
+                                <BellIcon className="h-6 w-6" />
+                                {notifications.reduce((count, notification) => count + (!notification.read ? 1 : 0), 0) > 0 ? <span className="indicator-item badge badge-secondary badge-sm">{notifications.reduce((count, notification) => count + (!notification.read ? 1 : 0), 0)}</span> : null}
+                            </div>
+                        </button>
+                    }
                     {/* Profile icon, opening menu on click */}
                     <div className="dropdown dropdown-end ml-4">
                         <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                             <div className="w-10 rounded-full">
-                                <img src="https://placeimg.com/80/80/people" alt="profile" />
+                                <img src={userProfile.photo} alt="profile" />
                             </div>
                         </label>
                         <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                            <div className="flex p-2">
+                                <div className="flex-1 ">
+                                    <div className="w-10 rounded-full">
+                                        <img className="w-10 rounded-full" src={userProfile.photo} alt="profile" />
+                                    </div>
+                                </div>
+                                <div className="flex-1 ">
+                                    <p className='p-2'>{userProfile.name.substr(0, 12)}..</p>
+                                </div>
+                            </div>
                             <li className="justify-between">
                                 <Link to={'/app/settings-profile'}>
                                     Profile Settings

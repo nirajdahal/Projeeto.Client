@@ -19,14 +19,6 @@ const TopSideButtons = () => {
         </div>
     )
 }
-const TEAM_MEMBERS = [
-    { name: "Alex", avatar: "https://reqres.in/img/faces/1-image.jpg", email: "alex@dashwind.com", role: "Owner", joinedOn: moment(new Date()).add(-5 * 1, 'days').format("DD MMM YYYY"), lastActive: "5 hr ago" },
-    { name: "Ereena", avatar: "https://reqres.in/img/faces/2-image.jpg", email: "ereena@dashwind.com", role: "Admin", joinedOn: moment(new Date()).add(-5 * 2, 'days').format("DD MMM YYYY"), lastActive: "15 min ago" },
-    { name: "John", avatar: "https://reqres.in/img/faces/3-image.jpg", email: "jhon@dashwind.com", role: "Admin", joinedOn: moment(new Date()).add(-5 * 3, 'days').format("DD MMM YYYY"), lastActive: "20 hr ago" },
-    { name: "Matrix", avatar: "https://reqres.in/img/faces/4-image.jpg", email: "matrix@dashwind.com", role: "Manager", joinedOn: moment(new Date()).add(-5 * 4, 'days').format("DD MMM YYYY"), lastActive: "1 hr ago" },
-    { name: "Virat", avatar: "https://reqres.in/img/faces/5-image.jpg", email: "virat@dashwind.com", role: "Support", joinedOn: moment(new Date()).add(-5 * 5, 'days').format("DD MMM YYYY"), lastActive: "40 min ago" },
-    { name: "Miya", avatar: "https://reqres.in/img/faces/6-image.jpg", email: "miya@dashwind.com", role: "Support", joinedOn: moment(new Date()).add(-5 * 7, 'days').format("DD MMM YYYY"), lastActive: "5 hr ago" },
-]
 function Team() {
     const dispatch = useDispatch()
     const [selectedOptions, setSelectedOptions] = useState({});
@@ -93,7 +85,7 @@ function Team() {
     }
     const getRoleComponent = (role) => {
         if (role === "admin") return <div className="badge badge-secondary">{role}</div>
-        if (role === "manager") return <div className="badge">{role}</div>
+        if (role === "manager") return <div className="badge badge-primary">{role}</div>
         if (role === "suspended") return <div className="badge badge-error">{role}</div>
         if (role === "user") return <div className="badge badge-accent">{role}</div>
         else return <div className="badge badge-ghost">{role}</div>
@@ -102,6 +94,23 @@ function Team() {
         <>
             <TitleCard title="Active Members" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
                 {/* Team Member list in table format loaded constant */}
+                <div className="md:flex xs:block justify-center p-2">
+                    <div className="flex-1 justify-center form-control text-center">
+                        <div className="input-group">
+                            <input type="text" placeholder="Search…" className="input input-bordered input-sm " />
+                            <button className="btn btn-square btn-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex flex-1">
+                        <select className="select select-sm  mt-2 select-bordered  max-w-xs">
+                            <option disabled selected>Sort By</option>
+                            <option>Name</option>
+                            <option>Date</option>
+                        </select>
+                    </div>
+                </div>
                 <div className="overflow-x-auto w-full">
                     <table className="table w-full">
                         <thead>
@@ -156,6 +165,11 @@ function Team() {
                             }
                         </tbody>
                     </table>
+                </div>
+                <div className="btn-group flex justify-center mt-2">
+                    <button className="btn btn-sm">«</button>
+                    <button className="btn btn-sm">Page 22</button>
+                    <button className="btn btn-sm">»</button>
                 </div>
             </TitleCard>
         </>

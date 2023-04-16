@@ -70,8 +70,15 @@ const forgotPassword = async (userData) => {
     return response.data;
 };
 // Get Users
-const getUsers = async () => {
-    const response = await axios.get(API_URL + "getUsers");
+const getUsers = async (advQuery) => {
+    const response = await axios.get(API_URL + "getUsers", {
+        params: {
+            search: advQuery.search,
+            page: advQuery.page,
+            limit: advQuery.limit,
+            sort: advQuery.sort,
+        }
+    });
     return response.data;
 };
 // Delete User

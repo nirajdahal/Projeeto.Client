@@ -1,6 +1,6 @@
 import { data } from "autoprefixer"
 import moment from "moment"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import TitleCard from "../../../components/Cards/TitleCard"
@@ -21,10 +21,18 @@ const TopSideButtons = () => {
 }
 function Team() {
     const dispatch = useDispatch()
+    const searchInputRef = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [selectedSorting, setSelectedSorting] = useState('')
+    const [selectedSearching, setSelectedSearching] = useState('')
+    const [advanceQuery, setAdvanceQuery] = useState({
+        page: 1,
+        limit: 3,
+    })
     const [selectedOptions, setSelectedOptions] = useState({});
     const [members, setMembers] = useState(null)
     const [userToSend, setUserToSend] = useState("")
-    const { users, isSuccess, message } = useSelector(
+    const { users, isSuccess, message, count, pagination } = useSelector(
         (state) => state.auth
     )
     const handleOptionChange = (itemId, event) => {
@@ -41,7 +49,7 @@ function Team() {
     }, [users])
     useEffect(() => {
         const getUserList = async () => {
-            await dispatch(getUsers())
+            await dispatch(getUsers(advanceQuery))
         }
         getUserList()
     }, [])
@@ -65,6 +73,11 @@ function Team() {
             dispatch(RESET())
         }
     }, [isSuccess])
+    useEffect(() => {
+        const advFunce = async () => await setAdvanceFiltering()
+        advFunce()
+    }
+        , [selectedSorting, currentPage, selectedSearching])
     const handleSubmit = async (id, previousRole) => {
         const selectedRole = selectedOptions[id]
         if (selectedRole === undefined) {
@@ -90,25 +103,66 @@ function Team() {
         if (role === "user") return <div className="badge badge-accent">{role}</div>
         else return <div className="badge badge-ghost">{role}</div>
     }
+    const setPagination = async (val) => {
+        if (pagination.next) {
+            console.log("i am paginated")
+        }
+        if (val === "-") {
+            setCurrentPage(prevPage => {
+                if (prevPage !== 1) {
+                    return prevPage - 1
+                }
+                return prevPage
+            })
+        }
+        if (val === "+") {
+            setCurrentPage(prevPage => prevPage + 1)
+        }
+    }
+    const setSorting = async (e) => {
+        setSelectedSorting((prevSelectedSorting) => e.target.value);
+    }
+    const getSearching = async () => {
+        setSelectedSearching(searchInputRef.current.value)
+    }
+    const setAdvanceFiltering = async () => {
+        let advQuery = {
+            search: selectedSearching,
+            page: currentPage,
+            limit: 3,
+            sort: selectedSorting,
+        }
+        setAdvanceQuery(advQuery)
+        await dispatch(getUsers(advQuery))
+    }
+    const resetFilter = () => {
+        setSelectedSorting("")
+        setSelectedSearching("")
+        setCurrentPage(1)
+        searchInputRef.current.value = ""
+    }
     return (
         <>
-            <TitleCard title="Active Members" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
+            <TitleCard title={"Members: " + count} topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
                 {/* Team Member list in table format loaded constant */}
                 <div className="md:flex xs:block justify-center p-2">
                     <div className="flex-1 justify-center form-control text-center">
                         <div className="input-group">
-                            <input type="text" placeholder="Search…" className="input input-bordered input-sm " />
-                            <button className="btn btn-square btn-sm">
+                            <input ref={searchInputRef} type="text" placeholder="Search…" className="input input-bordered input-sm " />
+                            <button className="btn btn-square btn-sm" onClick={() => getSearching()}>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                             </button>
                         </div>
                     </div>
-                    <div className="flex flex-1">
-                        <select className="select select-sm  mt-2 select-bordered  max-w-xs">
-                            <option disabled selected>Sort By</option>
-                            <option>Name</option>
-                            <option>Date</option>
+                    <div className="flex flex-1 justify-center">
+                        <select className="select select-sm  mt-2 select-bordered  max-w-xs" onChange={async (e) => await setSorting(e)}>
+                            <option disabled>Sort By</option>
+                            <option value="-createdAt">Date</option>
+                            <option value="name">Name</option>
                         </select>
+                    </div>
+                    <div className="flex flex-1 justify-center">
+                        <button className="btn btn-sm btn-error mt-2" onClick={resetFilter}>Reset</button>
                     </div>
                 </div>
                 <div className="overflow-x-auto w-full">
@@ -167,9 +221,9 @@ function Team() {
                     </table>
                 </div>
                 <div className="btn-group flex justify-center mt-2">
-                    <button className="btn btn-sm">«</button>
-                    <button className="btn btn-sm">Page 22</button>
-                    <button className="btn btn-sm">»</button>
+                    <button className={`btn btn-sm ${(currentPage === 1) && 'btn-disabled'}`} onClick={() => setPagination("-")}>«</button>
+                    <button className="btn btn-sm ">Page {currentPage}</button>
+                    <button className={`btn btn-sm ${!pagination.next && 'btn-disabled'}`} onClick={() => setPagination("+")}>»</button>
                 </div>
             </TitleCard>
         </>

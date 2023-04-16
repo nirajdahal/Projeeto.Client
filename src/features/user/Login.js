@@ -75,7 +75,7 @@ function Login() {
                             </div>
                             <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
                             <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Login</button>
-                            <button className={"btn mt-2 w-full btn-dark" + (loading ? " loading" : "")}>
+                            <span className={"btn mt-2 w-full btn-dark" + (loading ? " loading" : "")}>
                                 <GoogleLogin
                                     type="icon"
                                     shape='pill'
@@ -86,7 +86,7 @@ function Login() {
                                         toast.error("Login Failed");
                                     }}
                                 />
-                            </button >
+                            </span >
                             <div className='text-center mt-4'>Don't have an account yet? <Link to="/register"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Register</span></Link></div>
                         </form>
                     </div>

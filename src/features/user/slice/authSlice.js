@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import authService from '../services/UserService';
 const initialState = {
     isLoggedIn: false,
+    pagination: {},
+    count: 0,
     user: null,
     users: [],
     twoFactor: false,
@@ -152,9 +154,9 @@ export const resetPassword = createAsyncThunk(
 // getUsers
 export const getUsers = createAsyncThunk(
     "auth/getUsers",
-    async (_, thunkAPI) => {
+    async (advQuery, thunkAPI) => {
         try {
-            return await authService.getUsers();
+            return await authService.getUsers(advQuery);
         } catch (error) {
             const message = setErrorFromResponse(error)
             return thunkAPI.rejectWithValue(message);
@@ -462,6 +464,9 @@ const authSlice = createSlice({
                 state.isSuccess = true;
                 state.message = action.payload.message;
                 state.users = action.payload.data;
+                state.pagination = action.payload.pagination
+                state.count = action.payload.count
+                console.log(state.pagination)
             })
             .addCase(getUsers.rejected, (state, action) => {
                 state.isLoading = false;

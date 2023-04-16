@@ -15,12 +15,12 @@ function Header() {
     const dispatch = useDispatch()
     const { noOfNotifications, pageTitle } = useSelector(state => state.header)
     const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme"))
-    const [userProfile, setUserProfile] = useState({
-        name: "user",
-        photo: "user"
-    })
+    const [userDetail, setUserDetail] = useState(JSON.parse(localStorage.getItem('user')))
     const { notifications } = useSelector(
         (state) => state.notification
+    )
+    const { user, isSuccess } = useSelector(
+        (state) => state.auth
     )
     useEffect(() => {
         themeChange(false)
@@ -34,14 +34,16 @@ function Header() {
         // 👆 false parameter is required for react project
     }, [])
     useEffect(() => {
-        console.log("user notification from header called")
-        const user = JSON.parse(localStorage.getItem('user'))
+        if (user) {
+            setUserDetail(JSON.parse(localStorage.getItem('user')))
+        }
+    }, [user, isSuccess])
+    useEffect(() => {
         const token = localStorage.getItem('token')
-        setUserProfile(user)
-        dispatch(getNotifications(user._id))
-        console.log("user_", user)
-        initializeSocket(token, user)
-        socketGetNotifications(user, dispatch)
+        dispatch(getNotifications(userDetail._id))
+        console.log("user_", userDetail)
+        initializeSocket(token, userDetail)
+        socketGetNotifications(userDetail, dispatch)
     }, [])
     // Opening right sidebar for notification
     const openNotification = () => {
@@ -70,12 +72,12 @@ function Header() {
                     {/* Multiple theme selection, uncomment this if you want to enable multiple themes selection, 
                 also includes corporate and retro themes in tailwind.config file */}
                     {/* <select className="select select-sm mr-4" data-choose-theme>
-                    <option disabled selected>Theme</option>
-                    <option value="light">Default</option>
-                    <option value="dark">Dark</option>
-                    <option value="corporate">Corporate</option>
-                    <option value="retro">Retro</option>
-                </select> */}
+                        <option disabled selected>Theme</option>
+                        <option value="light">Default</option>
+                        <option value="dark">Dark</option>
+                        <option value="corporate">Corporate</option>
+                        <option value="retro">Retro</option>
+                    </select> */}
                     {/* Light and dark theme selection toogle **/}
                     <label className="swap ">
                         <input type="checkbox" />
@@ -95,18 +97,18 @@ function Header() {
                     <div className="dropdown dropdown-end ml-4">
                         <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                             <div className="w-10 rounded-full">
-                                <img src={userProfile.photo} alt="profile" />
+                                <img src={userDetail.photo} alt="profile" />
                             </div>
                         </label>
                         <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                             <div className="flex p-2">
                                 <div className="flex-1 ">
                                     <div className="w-10 rounded-full">
-                                        <img className="w-10 rounded-full" src={userProfile.photo} alt="profile" />
+                                        <img className="w-10 rounded-full" src={userDetail.photo} alt="profile" />
                                     </div>
                                 </div>
                                 <div className="flex-1 ">
-                                    <p className='p-2'>{userProfile.name.substr(0, 12)}..</p>
+                                    <p className='p-2'>{userDetail.email.substr(0, 12)}..</p>
                                 </div>
                             </div>
                             <li className="justify-between">

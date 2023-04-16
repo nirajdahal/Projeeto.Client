@@ -8,6 +8,7 @@ const Charts = lazy(() => import('../pages/protected/Charts'))
 const Leads = lazy(() => import('../pages/protected/Leads'))
 const Integration = lazy(() => import('../pages/protected/Integration'))
 const Team = lazy(() => import('../pages/protected/Team'))
+const ChangePassword = lazy(() => import('../pages/protected/ChangePassword'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
@@ -35,9 +36,14 @@ const routes = [
     isAccessible: ['admin']
   },
   {
+    path: '/change-password',
+    component: ChangePassword,
+    isAccessible: ['admin']
+  },
+  {
     path: '/settings-profile',
     component: ProfileSettings,
-    isAccessible: ['admin']
+    isAccessible: ['user', 'admin', 'team', 'manager']
   },
   {
     path: '/settings-billing',

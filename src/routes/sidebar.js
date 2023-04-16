@@ -67,7 +67,7 @@ const routes = [
         path: '/forgot-password',
         icon: <KeyIcon className={submenuIconClasses} />,
         name: 'Forgot Password',
-        isAccessible: ['admin', 'manager', 'team']
+        isAccessible: ['admin', 'manager', 'team', , 'user']
       },
       {
         path: '/app/blank',
@@ -100,6 +100,12 @@ const routes = [
         icon: <WalletIcon className={submenuIconClasses} />,
         name: 'Billing',
         isAccessible: ['admin', 'manager', 'team']
+      },
+      {
+        path: '/app/change-password',
+        icon: <WalletIcon className={submenuIconClasses} />,
+        name: 'Change Password',
+        isAccessible: ['admin', 'manager', 'team', 'user']
       },
       {
         path: '/app/settings-team', // url

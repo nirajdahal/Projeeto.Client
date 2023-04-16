@@ -25,7 +25,7 @@ function NotificationBodyRightDrawer() {
                                 </div>
                                 <div>
                                     <h3 className="font-bold">{notification.message}</h3>
-                                    <div className="text-xs text-primary">{moment(notification.createdAt).fromNow()}</div>
+                                    <div className="text-xs text-secondary">{moment(notification.createdAt).fromNow()}</div>
                                 </div>
                             </div>
                         </span>

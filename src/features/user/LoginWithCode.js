@@ -26,24 +26,25 @@ function LoginWithCode() {
     const [userObj, setUserObj] = useState(INITIAL_USER_OBJ)
     const [loginCode, setLoginCode] = useState(INITIAL_LOGIN_CODE)
     useEffect(() => {
-        console.log(twoFactor)
         if (!twoFactor) {
-            navigate('/app/welcome')
+            window.location.href = "/"
+            dispatch(RESET())
+        }
+    }, [])
+    useEffect(() => {
+        console.log(twoFactor)
+        if (user) {
+            localStorage.setItem("token", user.token)
+            localStorage.setItem("user", JSON.stringify(user))
+            console.log("hey login with code was successfull", user)
+            setTimeout(() => {
+                navigate('/app/welcome')
+            }, 2000);
             dispatch(RESET())
         }
         if (isSuccess & !isError) {
             console.log("hey send code was successfull")
             setLinkSent(true)
-            dispatch(RESET())
-        }
-        if (isSuccess & !isError && user) {
-            window.location.href = '/app/welcome'
-            localStorage.setItem("token", user.token)
-            localStorage.setItem("user", JSON.stringify(user))
-            console.log("hey login with code was successfull")
-            setTimeout(() => {
-                navigate('/app/welcome')
-            }, 2000);
             dispatch(RESET())
         }
     }, [isSuccess, isError, user, dispatch])

@@ -40,6 +40,12 @@ const routes = [
     isAccessible: ['admin', 'manager', 'team']
   },
   {
+    path: '/app/kanban', // url
+    icon: <ChartBarIcon className={iconClasses} />, // icon component
+    name: 'Kanban', // name that appear in Sidebar
+    isAccessible: ['admin', 'team', 'manager', 'user']
+  },
+  {
     path: '/app/integration', // url
     icon: <BoltIcon className={iconClasses} />, // icon component
     name: 'Integration', // name that appear in Sidebar
@@ -105,6 +111,12 @@ const routes = [
         path: '/app/change-password',
         icon: <WalletIcon className={submenuIconClasses} />,
         name: 'Change Password',
+        isAccessible: ['admin', 'manager', 'team', 'user']
+      },
+      {
+        path: '/app/create-project',
+        icon: <WalletIcon className={submenuIconClasses} />,
+        name: 'Project',
         isAccessible: ['admin', 'manager', 'team', 'user']
       },
       {

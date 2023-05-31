@@ -2,10 +2,12 @@
 import { lazy } from 'react'
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
 const Welcome = lazy(() => import('../pages/protected/Welcome'))
+const Kanban = lazy(() => import('../pages/protected/Kanban'))
 const Page404 = lazy(() => import('../pages/protected/404'))
 const Blank = lazy(() => import('../pages/protected/Blank'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
 const Leads = lazy(() => import('../pages/protected/Leads'))
+const ProjectCreation = lazy(() => import('../pages/protected/ProjectCreation'))
 const Integration = lazy(() => import('../pages/protected/Integration'))
 const Team = lazy(() => import('../pages/protected/Team'))
 const ChangePassword = lazy(() => import('../pages/protected/ChangePassword'))
@@ -46,8 +48,18 @@ const routes = [
     isAccessible: ['user', 'admin', 'team', 'manager']
   },
   {
+    path: '/kanban',
+    component: Kanban,
+    isAccessible: ['user', 'admin', 'team', 'manager']
+  },
+  {
     path: '/settings-billing',
     component: Bills,
+    isAccessible: ['admin', 'manager']
+  },
+  {
+    path: '/create-project',
+    component: ProjectCreation,
     isAccessible: ['admin', 'manager']
   },
   {

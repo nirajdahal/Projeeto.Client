@@ -5,13 +5,15 @@ import rightDrawerSlice from '../features/common/rightDrawerSlice'
 import leadsSlice from '../features/leads/leadSlice'
 import authReducer from "../features/user/slice/authSlice"
 import notificationReducer from "../features/common/slice/NotificationSlice"
+import projectSlice from '../features/projects/slice/projectSlice'
 const combinedReducer = {
   header: headerSlice,
   auth: authReducer,
   notification: notificationReducer,
   rightDrawer: rightDrawerSlice,
   modal: modalSlice,
-  lead: leadsSlice
+  lead: leadsSlice,
+  project: projectSlice
 }
 export default configureStore({
   reducer: combinedReducer

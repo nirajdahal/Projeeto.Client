@@ -40,7 +40,7 @@ const routes = [
   {
     path: '/change-password',
     component: ChangePassword,
-    isAccessible: ['admin']
+    isAccessible: ['user', 'admin', 'team', 'manager']
   },
   {
     path: '/settings-profile',

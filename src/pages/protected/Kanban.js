@@ -5,6 +5,9 @@ import { useDispatch } from "react-redux";
 import projectService from "../../features/projects/services/ProjectService";
 import { getStages, RESET } from "../../features/projects/slice/projectSlice";
 import { configColor } from "../../features/projects/utils/ConfigColor";
+import authService from "../../features/user/services/UserService";
+import { socketGetUsers } from "../../socket/Socket";
+import { useRef } from "react";
 function App() {
     const dispatch = useDispatch()
     const [boards, setBoards] = useState([
@@ -277,74 +280,145 @@ function App() {
     }
 }
 function EditTask({ closeWindow, selectedTask }) {
+    const [allTeamMembers, setAllTeamMembers] = useState(null)
+    const [activeUsers, setActiveUsers] = useState(null)
+    // useEffect(() => {
+    //     socketGetUsers((data) => setActiveUsers(data.map(obj => obj.userId)))
+    // }, [socketGetUsers])
+    // const prevActiveUsers = useRef([]);
+    // function isEqual(a, b) {
+    //     if (a === b) return true;
+    //     if (typeof a !== typeof b) return false;
+    //     if (Array.isArray(a)) {
+    //         if (a.length !== b.length) return false;
+    //         for (let i = 0; i < a.length; i++) {
+    //             if (!isEqual(a[i], b[i])) return false;
+    //         }
+    //         return true;
+    //     }
+    //     if (typeof a === 'object') {
+    //         const keysA = Object.keys(a);
+    //         const keysB = Object.keys(b);
+    //         if (keysA.length !== keysB.length) return false;
+    //         for (const key of keysA) {
+    //             if (!isEqual(a[key], b[key])) return false;
+    //         }
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    // useEffect(() => {
+    //     socketGetUsers((data) => {
+    //         if (!isEqual(data, prevActiveUsers.current)) {
+    //             setActiveUsers(data);
+    //             prevActiveUsers.current = data;
+    //         }
+    //         console.log("users", prevActiveUsers)
+    //     });
+    // }, [socketGetUsers]);
+    useEffect(() => {
+        socketGetUsers((data) => {
+            setActiveUsers(() => data.map(obj => obj.userId));
+        })
+    }, [socketGetUsers]);
+    useEffect(() => {
+        const getAllTeamList = async () => {
+            const data = await authService.getTeamMembers();
+            setAllTeamMembers(data.data)
+        }
+        getAllTeamList()
+    }, [])
+    const extractTeamImage = (assignee) => {
+        if (!assignee) {
+            return null
+        }
+        if (allTeamMembers) {
+            const teams = allTeamMembers.find(team => team._id === assignee)
+            if (teams) {
+                return teams.photo
+            }
+            else {
+                return null
+            }
+        }
+    }
+    const checkUserStatus = (assignee) => {
+        // console.log("activeusers", activeUsers)
+        if (activeUsers) {
+            return activeUsers.includes(assignee)
+        }
+        return false
+    }
     return (
         <>
-            <div className=" cursor-auto min-h-screen ">
-                <div className=" grid gap-4 h-100 modal-box w-12/12 max-w-5xl p-8">
-                    <label onClick={closeWindow} htmlFor="editTask" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                    <h3 className="font-bold text-lg">Edit Task</h3>
-                    <div className={`form-control `}>
-                        <label className="label">
-                            <span className={"label-text text-base-content "}>Name</span>
-                        </label>
-                        <input defaultValue={selectedTask.name} type='text' className="input  input-bordered w-full " />
-                    </div>
-                    <div className={`form-control w-full`}>
-                        <label className="label">
-                            <span className={"label-text text-base-content "}>Description</span>
-                        </label>
-                        <textarea defaultValue={selectedTask.description} type='text' className="textarea  textarea-bordered w-full " />
-                    </div>
-                    <div className="flex">
-                        <div className={`form-control `} >
+            {allTeamMembers &&
+                <div className=" cursor-auto min-h-screen ">
+                    <div className=" grid gap-4 h-100 modal-box w-12/12 max-w-5xl p-8">
+                        <label onClick={closeWindow} htmlFor="editTask" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                        <h3 className="font-bold text-lg">Edit Task</h3>
+                        <div className={`form-control `}>
                             <label className="label">
-                                <span className={"label-text text-base-content w-full "}>Type &nbsp;
-                                    <span className={`badge ${configColor(selectedTask.type[0])} badge-outline mr-2`} >{selectedTask.type[0]}</span>
-                                </span>
+                                <span className={"label-text text-base-content "}>Name</span>
                             </label>
-                            <select className="select select-bordered w-full max-w-xs">
-                                <option disabled selected>Change</option>
-                                <option>Svelte</option>
-                                <option>Vue</option>
-                                <option>React</option>
-                            </select>
+                            <input defaultValue={selectedTask.name} type='text' className="input  input-bordered w-full " />
                         </div>
-                        <div className={`form-control ml-1`}>
+                        <div className={`form-control w-full`}>
                             <label className="label">
-                                <span className={"label-text text-base-content w-full "}>Priority &nbsp;
-                                    <span className={`badge ${configColor(selectedTask.priority[0])} badge-outline mr-2`} >{selectedTask.priority[0]}</span>
-                                </span>
+                                <span className={"label-text text-base-content "}>Description</span>
                             </label>
-                            <select className="select select-bordered w-full max-w-xs">
-                                <option disabled selected>Change</option>
-                                <option>Svelte</option>
-                                <option>Vue</option>
-                                <option>React</option>
-                            </select>
+                            <textarea defaultValue={selectedTask.description} type='text' className="textarea  textarea-bordered w-full " />
                         </div>
-                    </div>
-                    <div className={`form-control w-full`}>
-                        <label className="label">
-                            <span className={"label-text text-base-content "}>Assigned Users</span>
-                        </label>
-                    </div>
-                    <div>
-                        <div className="avatar online">
-                            <div className="rounded-full w-16">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLe5PABjXc17cjIMOibECLM7ppDwMmiDg6Dw&usqp=CAU" />
+                        <div className="flex">
+                            <div className={`form-control `} >
+                                <label className="label">
+                                    <span className={"label-text text-base-content w-full "}>Type &nbsp;
+                                        <span className={`badge ${configColor(selectedTask.type[0])} badge-outline mr-2`} >{selectedTask.type[0]}</span>
+                                    </span>
+                                </label>
+                                <select className="select select-bordered w-full max-w-xs">
+                                    <option disabled >Change</option>
+                                    <option>Svelte</option>
+                                    <option>Vue</option>
+                                    <option>React</option>
+                                </select>
+                            </div>
+                            <div className={`form-control ml-1`}>
+                                <label className="label">
+                                    <span className={"label-text text-base-content w-full "}>Priority &nbsp;
+                                        <span className={`badge ${configColor(selectedTask.priority[0])} badge-outline mr-2`} >{selectedTask.priority[0]}</span>
+                                    </span>
+                                </label>
+                                <select className="select select-bordered w-full max-w-xs">
+                                    <option disabled >Change</option>
+                                    <option>Svelte</option>
+                                    <option>Vue</option>
+                                    <option>React</option>
+                                </select>
                             </div>
                         </div>
-                        <div className="avatar offline">
-                            <div className=" rounded-full w-16">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuSTDCkFtxG2yl9qDYnHEwV6vF6Y9hkbiuzLmOaVoO_jupwImy1-NmP_kd8LiPzaimI8&usqp=CAU" />
-                            </div>
+                        <div className={`form-control w-full`}>
+                            <label className="label">
+                                <span className={"label-text text-base-content "}>Assigned Users</span>
+                            </label>
+                        </div>
+                        <div>
+                            {selectedTask.assignees.map(assignee => {
+                                return (
+                                    extractTeamImage(assignee) !== null && <>
+                                        <div key={assignee} className={`avatar ${checkUserStatus(assignee) ? 'online' : 'offline'}`}>
+                                            <div className="rounded-full w-16">
+                                                <img src={`${extractTeamImage(assignee)}`} />
+                                            </div>
+                                        </div>
+                                    </>
+                                )
+                            })}
+                        </div>
+                        <div className="modal-action">
+                            <label htmlFor="my-modal-5" className="btn">Yay!</label>
                         </div>
                     </div>
-                    <div className="modal-action">
-                        <label htmlFor="my-modal-5" className="btn">Yay!</label>
-                    </div>
-                </div>
-            </div>
+                </div>}
         </>
     )
 }

@@ -86,6 +86,11 @@ const getManagers = async () => {
     const response = await axios.get(API_URL + "getManagers");
     return response.data;
 };
+//Get Managers
+const getTeamMembers = async () => {
+    const response = await axios.get(API_URL + "getTeam");
+    return response.data;
+};
 // Delete User
 const deleteUser = async (id) => {
     const response = await axios.delete(API_URL + id);
@@ -125,6 +130,7 @@ const authService = {
     resetPassword,
     getUsers,
     getManagers,
+    getTeamMembers,
     deleteUser,
     upgradeUser,
     sendLoginCode,

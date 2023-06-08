@@ -15,7 +15,6 @@ function CreateProject() {
         }
         getManagerList()
     }, [])
-    const testVaribale = 5;
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = { name, description, manager: selectedManager }

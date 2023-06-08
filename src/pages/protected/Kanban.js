@@ -3,12 +3,14 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import projectService from "../../features/projects/services/ProjectService";
-import { getStages, RESET } from "../../features/projects/slice/projectSlice";
+import { getStages, RESET, updateTask } from "../../features/projects/slice/projectSlice";
 import { configColor } from "../../features/projects/utils/ConfigColor";
 import authService from "../../features/user/services/UserService";
 import { socketGetUsers } from "../../socket/Socket";
+import Select from 'react-select';
 import { useRef } from "react";
-function App() {
+import { useNavigate } from "react-router";
+function InternalPage() {
     const dispatch = useDispatch()
     const [boards, setBoards] = useState([
         {
@@ -38,6 +40,7 @@ function App() {
     const { stages } = useSelector(
         (state) => state.project
     )
+    const navigate = useNavigate();
     useEffect(() => {
         const getStagesFunc = async () => {
             const response = await projectService.getStages("643d7089186ee682aa473673")
@@ -47,7 +50,6 @@ function App() {
         getStagesFunc()
     }, [])
     useEffect(() => {
-        console.log(stages)
         setBoards(stages)
     }, [stages])
     const handleDragEnd = async ({ source, destination }) => {
@@ -110,7 +112,7 @@ function App() {
         }
     };
     const handleEditTask = (boardId, task) => {
-        setShowEditComponent(true)
+        // setShowEditComponent(true)
         setTaskToEdit(task)
         // const boardIndex = boards.findIndex((board) => board._id === boardId);
         // const taskIndex = boards[boardIndex].tasks.findIndex(
@@ -121,6 +123,7 @@ function App() {
         //     newBoards[boardIndex].tasks[taskIndex].name = newName;
         //     return newBoards;
         // });
+        navigate('/app/task', { state: task })
     };
     const handleDeleteTask = (boardId, taskId) => {
         const boardIndex = boards.findIndex((board) => board._id === boardId);
@@ -269,157 +272,195 @@ function App() {
                             </div>
                         ))}
                     </DragDropContext>
-                </div>
-            </div>
+                </div >
+            </div >
         );
     }
-    else {
-        return (
-            <EditTask closeWindow={closeModal} selectedTask={tasktoEdit} />
-        )
-    }
-}
-function EditTask({ closeWindow, selectedTask }) {
-    const [allTeamMembers, setAllTeamMembers] = useState(null)
-    const [activeUsers, setActiveUsers] = useState(null)
-    // useEffect(() => {
-    //     socketGetUsers((data) => setActiveUsers(data.map(obj => obj.userId)))
-    // }, [socketGetUsers])
-    // const prevActiveUsers = useRef([]);
-    // function isEqual(a, b) {
-    //     if (a === b) return true;
-    //     if (typeof a !== typeof b) return false;
-    //     if (Array.isArray(a)) {
-    //         if (a.length !== b.length) return false;
-    //         for (let i = 0; i < a.length; i++) {
-    //             if (!isEqual(a[i], b[i])) return false;
-    //         }
-    //         return true;
-    //     }
-    //     if (typeof a === 'object') {
-    //         const keysA = Object.keys(a);
-    //         const keysB = Object.keys(b);
-    //         if (keysA.length !== keysB.length) return false;
-    //         for (const key of keysA) {
-    //             if (!isEqual(a[key], b[key])) return false;
-    //         }
-    //         return true;
-    //     }
-    //     return false;
+    // else {
+    //     return (
+    //         <EditTask closeWindow={closeModal} taskToEdit={tasktoEdit} />
+    //     )
     // }
-    // useEffect(() => {
-    //     socketGetUsers((data) => {
-    //         if (!isEqual(data, prevActiveUsers.current)) {
-    //             setActiveUsers(data);
-    //             prevActiveUsers.current = data;
-    //         }
-    //         console.log("users", prevActiveUsers)
-    //     });
-    // }, [socketGetUsers]);
-    useEffect(() => {
-        socketGetUsers((data) => {
-            setActiveUsers(() => data.map(obj => obj.userId));
-        })
-    }, [socketGetUsers]);
-    useEffect(() => {
-        const getAllTeamList = async () => {
-            const data = await authService.getTeamMembers();
-            setAllTeamMembers(data.data)
-        }
-        getAllTeamList()
-    }, [])
-    const extractTeamImage = (assignee) => {
-        if (!assignee) {
-            return null
-        }
-        if (allTeamMembers) {
-            const teams = allTeamMembers.find(team => team._id === assignee)
-            if (teams) {
-                return teams.photo
-            }
-            else {
-                return null
-            }
-        }
-    }
-    const checkUserStatus = (assignee) => {
-        // console.log("activeusers", activeUsers)
-        if (activeUsers) {
-            return activeUsers.includes(assignee)
-        }
-        return false
-    }
-    return (
-        <>
-            {allTeamMembers &&
-                <div className=" cursor-auto min-h-screen ">
-                    <div className=" grid gap-4 h-100 modal-box w-12/12 max-w-5xl p-8">
-                        <label onClick={closeWindow} htmlFor="editTask" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                        <h3 className="font-bold text-lg">Edit Task</h3>
-                        <div className={`form-control `}>
-                            <label className="label">
-                                <span className={"label-text text-base-content "}>Name</span>
-                            </label>
-                            <input defaultValue={selectedTask.name} type='text' className="input  input-bordered w-full " />
-                        </div>
-                        <div className={`form-control w-full`}>
-                            <label className="label">
-                                <span className={"label-text text-base-content "}>Description</span>
-                            </label>
-                            <textarea defaultValue={selectedTask.description} type='text' className="textarea  textarea-bordered w-full " />
-                        </div>
-                        <div className="flex">
-                            <div className={`form-control `} >
-                                <label className="label">
-                                    <span className={"label-text text-base-content w-full "}>Type &nbsp;
-                                        <span className={`badge ${configColor(selectedTask.type[0])} badge-outline mr-2`} >{selectedTask.type[0]}</span>
-                                    </span>
-                                </label>
-                                <select className="select select-bordered w-full max-w-xs">
-                                    <option disabled >Change</option>
-                                    <option>Svelte</option>
-                                    <option>Vue</option>
-                                    <option>React</option>
-                                </select>
-                            </div>
-                            <div className={`form-control ml-1`}>
-                                <label className="label">
-                                    <span className={"label-text text-base-content w-full "}>Priority &nbsp;
-                                        <span className={`badge ${configColor(selectedTask.priority[0])} badge-outline mr-2`} >{selectedTask.priority[0]}</span>
-                                    </span>
-                                </label>
-                                <select className="select select-bordered w-full max-w-xs">
-                                    <option disabled >Change</option>
-                                    <option>Svelte</option>
-                                    <option>Vue</option>
-                                    <option>React</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className={`form-control w-full`}>
-                            <label className="label">
-                                <span className={"label-text text-base-content "}>Assigned Users</span>
-                            </label>
-                        </div>
-                        <div>
-                            {selectedTask.assignees.map(assignee => {
-                                return (
-                                    extractTeamImage(assignee) !== null && <>
-                                        <div key={assignee} className={`avatar ${checkUserStatus(assignee) ? 'online' : 'offline'}`}>
-                                            <div className="rounded-full w-16">
-                                                <img src={`${extractTeamImage(assignee)}`} />
-                                            </div>
-                                        </div>
-                                    </>
-                                )
-                            })}
-                        </div>
-                        <div className="modal-action">
-                            <label htmlFor="my-modal-5" className="btn">Yay!</label>
-                        </div>
-                    </div>
-                </div>}
-        </>
-    )
 }
-export default App;
+// function EditTask({ closeWindow, taskToEdit }) {
+//     const [selectedTask, setSelectedTask] = useState(taskToEdit)
+//     const [allTeamMembers, setAllTeamMembers] = useState(null)
+//     const [activeUsers, setActiveUsers] = useState(null)
+//     const [selectedType, setSelectedType] = useState('')
+//     const [selectedTitle, setSelectedTitle] = useState('')
+//     const [selectedDescription, setSelectedDescription] = useState('')
+//     const [selectedAssignee, setSelectedAssignee] = useState('')
+//     const [selectedStage, setSelectedStageId] = useState('')
+//     const [selectedPriority, setSelectedPriority] = useState('')
+//     const [multiSelectOption, setMultiSelectOption] = useState([])
+//     const [selectedMultiOption, setSelectedMultiOption] = useState(null);
+//     const dispatch = useDispatch()
+//     const { updatedTask } = useSelector(
+//         (state) => state.auth
+//     )
+//     useEffect(() => {
+//         socketGetUsers((data) => {
+//             setActiveUsers(() => data.map(obj => obj.userId));
+//         })
+//     }, [socketGetUsers]);
+//     useEffect(() => {
+//         const {
+//             assignees,
+//             description,
+//             name,
+//             priority,
+//             stage,
+//             type
+//         } = selectedTask
+//         setSelectedAssignee(assignees)
+//         setSelectedDescription(description)
+//         setSelectedPriority(priority[0])
+//         setSelectedTitle(name)
+//         setSelectedType(type[0])
+//         setSelectedStageId(stage)
+//         const getAllTeamList = async () => {
+//             const data = await authService.getTeamMembers();
+//             setAllTeamMembers(data.data)
+//             // configure multi select options
+//             const options = data.data.map(team => ({
+//                 value: team._id,
+//                 label: team.name
+//             }))
+//             setMultiSelectOption(() => options)
+//         }
+//         getAllTeamList()
+//         console.log(multiSelectOption, selectedTask.assignees)
+//     }, [])
+//     const extractTeamImage = (assignee) => {
+//         if (!assignee) {
+//             return null
+//         }
+//         if (allTeamMembers) {
+//             const teams = allTeamMembers.find(team => team._id === assignee)
+//             if (teams) {
+//                 return teams.photo
+//             }
+//             else {
+//                 return null
+//             }
+//         }
+//     }
+//     const checkUserStatus = (assignee) => {
+//         // console.log("activeusers", activeUsers)
+//         if (activeUsers) {
+//             return activeUsers.includes(assignee)
+//         }
+//         return false
+//     }
+//     const submitForm = async (e) => {
+//         e.preventDefault()
+//         const paramIds = {
+//             stageId: selectedStage,
+//             id: selectedTask._id
+//         }
+//         const data = {
+//             assignees: selectedAssignee,
+//             description: selectedDescription,
+//             name: selectedTitle,
+//             priority: [selectedPriority],
+//             stage: selectedStage,
+//             type: [selectedType],
+//             assignees: selectedMultiOption.map(option => option.value)
+//         }
+//         await dispatch(updateTask({ paramIds, data }))
+//     }
+//     return (
+//         <>
+//             {allTeamMembers &&
+//                 <form onSubmit={(e) => submitForm(e)}>
+//                     <div className=" cursor-auto min-h-screen ">
+//                         <div className=" grid gap-4 h-100 modal-box w-12/12 max-w-5xl p-8">
+//                             <label onClick={closeWindow} htmlFor="editTask" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+//                             <h3 className="font-bold text-lg">Edit Task</h3>
+//                             <div className={`form-control `}>
+//                                 <label className="label">
+//                                     <span className={"label-text text-base-content "}>Name</span>
+//                                 </label>
+//                                 <input defaultValue={selectedTask.name} onChange={(e) => setSelectedTitle(e.target.value)} type='text' className="input  input-bordered w-full " />
+//                             </div>
+//                             <div className={`form-control w-full`}>
+//                                 <label className="label">
+//                                     <span className={"label-text text-base-content "}>Description</span>
+//                                 </label>
+//                                 <textarea defaultValue={selectedTask.description} type='text' onChange={(e) => setSelectedDescription(e.target.value)} className="textarea  textarea-bordered w-full " />
+//                             </div>
+//                             <div className="flex justify-start">
+//                                 <div className={`form-control w-1/2`}  >
+//                                     <label className="label">
+//                                         <span className={"label-text text-base-content w-full "}>Type &nbsp;
+//                                             <span className={`badge ${configColor(selectedType)} badge-outline mr-2`} >{selectedType}</span>
+//                                         </span>
+//                                     </label>
+//                                     <select className="select select-bordered w-full max-w-xs" onChange={e => setSelectedType(e.target.value)}>
+//                                         <option selected={true} value="Change" disabled >Change</option>
+//                                         <option value={'Bug'}>Bug</option>
+//                                         <option value={'New Feature'}>New Feature</option>
+//                                         <option value={'Update'}>Update</option>
+//                                         <option value={'Others'}>Others</option>
+//                                     </select>
+//                                 </div>
+//                                 <div className={`form-control w-1/2`}>
+//                                     <label className="label">
+//                                         <span className={"label-text text-base-content w-full "}>Priority &nbsp;
+//                                             <span className={`badge ${configColor(selectedPriority)} badge-outline mr-2`} >{selectedPriority}</span>
+//                                         </span>
+//                                     </label>
+//                                     <select className="select select-bordered w-full max-w-xs" onChange={e => setSelectedPriority(e.target.value)}>
+//                                         <option selected={true} value="Change" disabled >Change</option>
+//                                         <option value={'Low'}>Low</option>
+//                                         <option value={'Medium'}>Medium</option>
+//                                         <option value={'High'}>High</option>
+//                                         <option value={'Urgent'}>Urgent</option>
+//                                     </select>
+//                                 </div>
+//                             </div>
+//                             <div className={`form-control w-full`}>
+//                                 <label className="label">
+//                                     <span className={"label-text text-base-content "}>Assigned Users</span>
+//                                 </label>
+//                             </div>
+//                             <div>
+//                                 {selectedTask.assignees.map(assignee => {
+//                                     return (
+//                                         extractTeamImage(assignee) !== null && <>
+//                                             <div key={assignee} className={`avatar ${checkUserStatus(assignee) ? 'online' : 'offline'}`}>
+//                                                 <div className="rounded-full w-16">
+//                                                     <img src={`${extractTeamImage(assignee)}`} />
+//                                                 </div>
+//                                             </div>
+//                                         </>
+//                                     )
+//                                 })}
+//                             </div>
+//                             <div className={`form-control w-full`}>
+//                                 <label className="label">
+//                                     <span className={"label-text text-base-content "}>Assigned Users</span>
+//                                 </label>
+//                             </div>
+//                             <div className="z-10">
+//                                 <Select
+//                                     defaultValue={multiSelectOption.filter(option => selectedTask.assignees.includes(option.value))}
+//                                     isMulti
+//                                     name="Team"
+//                                     options={multiSelectOption}
+//                                     className="basic-multi-select"
+//                                     classNamePrefix="select"
+//                                     onChange={setSelectedMultiOption}
+//                                 />
+//                             </div>
+//                             <div className="modal-action">
+//                                 <button type="submit" htmlFor="my-modal-5" className="btn">Yay!</button>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </form>
+//             }
+//         </>
+//     )
+// }
+export default InternalPage;

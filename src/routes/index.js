@@ -3,6 +3,7 @@ import { lazy } from 'react'
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
 const Welcome = lazy(() => import('../pages/protected/Welcome'))
 const Kanban = lazy(() => import('../pages/protected/Kanban'))
+const Task = lazy(() => import('../pages/protected/Task'))
 const Page404 = lazy(() => import('../pages/protected/404'))
 const Blank = lazy(() => import('../pages/protected/Blank'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
@@ -50,6 +51,10 @@ const routes = [
   {
     path: '/kanban',
     component: Kanban,
+    isAccessible: ['user', 'admin', 'team', 'manager']
+  }, {
+    path: '/task',
+    component: Task,
     isAccessible: ['user', 'admin', 'team', 'manager']
   },
   {

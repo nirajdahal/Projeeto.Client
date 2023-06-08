@@ -39,12 +39,19 @@ const createTask = async (data) => {
     const response = await axios.post(API_URL + "/", data);
     return response.data;
 }
+//Update Task
+const updateTask = async (paramIds, data) => {
+    console.log("paramsId and ids", paramIds, data)
+    const response = await axios.put(`${API_URL}/stages/${paramIds.stageId}/tasks/${paramIds.id}`, data);
+    return response.data;
+}
 const projectService = {
     getAllProjects,
     getProject,
     createProject,
     getStages,
     updateTaskToNewStage,
-    reorderTaskWithinStage
+    reorderTaskWithinStage,
+    updateTask
 };
 export default projectService;

@@ -3,7 +3,7 @@ const configColor = (text) => {
         case 'bug':
             return 'badge-error'; // red badge
         case 'new feature':
-            return 'badge-primary'; // blue badge
+            return 'badge-success'; // green badge
         case 'update':
             return 'badge-warning'; // yellow badge
         case 'others':
@@ -11,7 +11,7 @@ const configColor = (text) => {
         case 'low':
             return 'badge-success'; // green badge
         case 'medium':
-            return 'badge-info'; // accent color badge
+            return 'badge-warning'; // yellow color badge
         case 'high':
             return 'badge-error'; // info color badge
         case 'urgent':

@@ -7,6 +7,7 @@ import authService from "../../../../features/user/services/UserService";
 import { socketGetUsers } from "../../../../socket/Socket";
 import Select from 'react-select';
 import { useLocation, useNavigate } from "react-router";
+import { RESET } from "../../../user/slice/authSlice";
 function EditTask() {
     const location = useLocation()
     const taskToEdit = location.state
@@ -23,9 +24,15 @@ function EditTask() {
     const [selectedMultiOption, setSelectedMultiOption] = useState(null);
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const { updatedTask } = useSelector(
-        (state) => state.auth
+    const { updatedTask, isSuccess } = useSelector(
+        (state) => state.project
     )
+    useEffect(() => {
+        if (updatedTask && isSuccess) {
+            setSelectedTask(updatedTask)
+            dispatch(RESET())
+        }
+    }, [updatedTask])
     useEffect(() => {
         socketGetUsers((data) => {
             setActiveUsers(() => data.map(obj => obj.userId));
@@ -95,7 +102,7 @@ function EditTask() {
             type: [selectedType],
             assignees: selectedMultiOption.map(option => option.value)
         }
-        await dispatch(updateTask({ paramIds, data }))
+        dispatch(updateTask({ paramIds, data }));
     }
     return (
         <>
@@ -182,7 +189,7 @@ function EditTask() {
                                 />
                             </div>
                             <div className="modal-action">
-                                <button type="submit" htmlFor="my-modal-5" className="btn">Yay!</button>
+                                <button type="submit" htmlFor="my-modal-5" className="btn">Update</button>
                             </div>
                         </div>
                     </div>

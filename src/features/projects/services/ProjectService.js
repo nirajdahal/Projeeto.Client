@@ -41,8 +41,12 @@ const createTask = async (data) => {
 }
 //Update Task
 const updateTask = async (paramIds, data) => {
-    console.log("paramsId and ids", paramIds, data)
-    const response = await axios.put(`${API_URL}/stages/${paramIds.stageId}/tasks/${paramIds.id}`, data);
+    const response = await axios.put(`${API_URL}/stages/${paramIds.stageId}/tasks/${paramIds.id}`, data)
+    return response.data;
+}
+//Update Task
+const deleteTask = async (paramIds) => {
+    const response = await axios.delete(`${API_URL}/stages/${paramIds.stageId}/tasks/${paramIds.id}`)
     return response.data;
 }
 const projectService = {
@@ -52,6 +56,7 @@ const projectService = {
     getStages,
     updateTaskToNewStage,
     reorderTaskWithinStage,
-    updateTask
+    updateTask,
+    deleteTask
 };
 export default projectService;

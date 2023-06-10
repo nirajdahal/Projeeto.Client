@@ -42,13 +42,24 @@ export const getStages = createAsyncThunk("project/getStages", async (projectId,
         return thunkAPI.rejectWithValue(message);
     }
 });
-// Get stages By Project Id
+// Update task
 export const updateTask = createAsyncThunk(
     "project/updateTask",
     async ({ paramIds, data }, thunkAPI) => {
         try {
-            console.log("lets look at the data", paramIds, data)
             return await projectService.updateTask(paramIds, data);
+        } catch (error) {
+            const message = setErrorFromResponse(error)
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+// Update task
+export const deleteTask = createAsyncThunk(
+    "project/deleteTask",
+    async (paramIds, thunkAPI) => {
+        try {
+            return await projectService.deleteTask(paramIds);
         } catch (error) {
             const message = setErrorFromResponse(error)
             return thunkAPI.rejectWithValue(message);
@@ -95,11 +106,24 @@ const projectSlice = createSlice({
             .addCase(updateTask.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.updatedTask = action.payload
+                state.updatedTask = action.payload.data
                 state.message = action.payload.message
                 toast.success("Updated Task Succesfully")
             })
             .addCase(updateTask.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            }).addCase(deleteTask.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteTask.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.message = action.payload.message
+                toast.success("Task Deleted Succesfully")
+            })
+            .addCase(deleteTask.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

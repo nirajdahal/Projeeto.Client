@@ -29,14 +29,19 @@ const updateTaskToNewStage = async (paramIds, data) => {
     const response = await axios.put(`${API_URL}/stages/${paramIds.stageId}/tasks/${paramIds.id}/newStage`, data);
     return response.data;
 }
-//   // Reorder tasks within a stage
+// Reorder tasks within a stage
 const reorderTaskWithinStage = async (paramIds, data) => {
     const response = await axios.put(`${API_URL}/stages/${paramIds.stageId}/tasks/${paramIds.id}/reorder`, data);
     return response.data;
 }
+// Reorder tasks within a stage
+const getTaskById = async (paramIds) => {
+    const response = await axios.get(`${API_URL}/stages/${paramIds.stageId}/tasks/${paramIds.id}`);
+    return response.data;
+}
 // Create task
-const createTask = async (data) => {
-    const response = await axios.post(API_URL + "/", data);
+const createTask = async (stageId, data) => {
+    const response = await axios.post(`${API_URL}/stages/${stageId}/tasks`, data);
     return response.data;
 }
 //Update Task
@@ -57,6 +62,8 @@ const projectService = {
     updateTaskToNewStage,
     reorderTaskWithinStage,
     updateTask,
-    deleteTask
+    deleteTask,
+    createTask,
+    getTaskById
 };
 export default projectService;

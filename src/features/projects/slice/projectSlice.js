@@ -43,6 +43,18 @@ export const getStages = createAsyncThunk("project/getStages", async (projectId,
     }
 });
 // Update task
+export const addTask = createAsyncThunk(
+    "project/addTask",
+    async ({ stageId, data }, thunkAPI) => {
+        try {
+            return await projectService.createTask(stageId, data);
+        } catch (error) {
+            const message = setErrorFromResponse(error)
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+// Update task
 export const updateTask = createAsyncThunk(
     "project/updateTask",
     async ({ paramIds, data }, thunkAPI) => {
@@ -54,7 +66,7 @@ export const updateTask = createAsyncThunk(
         }
     }
 );
-// Update task
+// Delete task
 export const deleteTask = createAsyncThunk(
     "project/deleteTask",
     async (paramIds, thunkAPI) => {
@@ -73,6 +85,14 @@ const projectSlice = createSlice({
         RESET(state) {
             state.project = {}
             state.stages = []
+            state.task = {}
+            state.updatedTask = {}
+            state.isError = false
+            state.isSuccess = false
+            state.isLoading = false
+            state.message = ""
+        },
+        RESET_TASK(state) {
             state.task = {}
             state.updatedTask = {}
             state.isError = false
@@ -100,6 +120,22 @@ const projectSlice = createSlice({
                 state.message = action.payload;
                 toast.error(action.payload);
             })
+            .addCase(addTask.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(addTask.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.task = action.payload.data
+                state.message = action.payload.message
+                toast.success("Task Created Succesfully")
+            })
+            .addCase(addTask.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
             .addCase(updateTask.pending, (state) => {
                 state.isLoading = true;
             })
@@ -115,7 +151,8 @@ const projectSlice = createSlice({
                 state.isError = true;
                 state.message = action.payload;
                 toast.error(action.payload);
-            }).addCase(deleteTask.pending, (state) => {
+            })
+            .addCase(deleteTask.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(deleteTask.fulfilled, (state, action) => {
@@ -131,7 +168,7 @@ const projectSlice = createSlice({
             })
     },
 })
-export const { RESET } =
+export const { RESET, RESET_TASK } =
     projectSlice.actions;
 // export const selectUser = (state) => state.project.user;
 export default projectSlice.reducer;

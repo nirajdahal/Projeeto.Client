@@ -16,7 +16,6 @@ const LoginWithCode = lazy(() => import('./pages/LoginWithCode'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword'))
 const Register = lazy(() => import('./pages/Register'))
 const Verify = lazy(() => import('./pages/Verify'))
-const Documentation = lazy(() => import('./pages/Documentation'))
 axios.defaults.withCredentials = true;
 // Initializing different libraries
 initializeApp()
@@ -51,7 +50,6 @@ function App() {
               <Route path="/loginWithCode" element={<LoginWithCode />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/resetPassword/:resetToken" element={<ResetPassword />} />
-              <Route path="/documentation" element={<Documentation />} />
             </>)
               /* Place new routes over this */}
             <Route path="/app/*" element={<Layout />} />

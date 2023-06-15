@@ -2,12 +2,11 @@ import Header from "./Header"
 import pagesRoutes from '../routes/index'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
 import routes from '../routes'
-import { Suspense, lazy } from 'react'
+import React, { Suspense, lazy } from 'react'
 import SuspenseContent from "./SuspenseContent"
 import { useSelector } from 'react-redux'
 import jwt_decode from "jwt-decode";
 import { useEffect, useRef } from "react"
-import { initializeSocket } from "../socket/Socket"
 const Page404 = lazy(() => import('../pages/protected/404'))
 const token = localStorage.getItem('token')
 function PageContent() {
@@ -15,7 +14,11 @@ function PageContent() {
     let currentPath = location.pathname;
     const mainContentRef = useRef(null);
     const { pageTitle } = useSelector(state => state.header)
-    currentPath = currentPath.replace('/app', '')
+    const extractSubstring = (str) => {
+        const regexMatch = str.match(/\/app(\/[^\/]+)?\/?/);
+        return regexMatch ? regexMatch[1] || '' : '';
+    };
+    currentPath = extractSubstring(currentPath)
     const accesibleRoles = getRouteWithCurrentPath(currentPath)[0].isAccessible
     const decodedToken = jwt_decode(token)
     const isAccessible = checkIsAccessibleByRole(accesibleRoles, decodedToken.role)
@@ -49,12 +52,20 @@ function PageContent() {
                         {
                             routes.map((route, key) => {
                                 return (
-                                    <Route
-                                        key={key}
-                                        exact={true}
-                                        path={`${route.path}`}
-                                        element={<route.component />}
-                                    />
+                                    <React.Fragment key={key + 1}>
+                                        <Route
+                                            key={key}
+                                            exact={true}
+                                            path={`${route.path}`}
+                                            element={<route.component />}
+                                        />
+                                        <Route
+                                            key={`${route.path}-${key}`}
+                                            exact={true}
+                                            path={`${route.path}/:id`}
+                                            element={<route.component />}
+                                        />
+                                    </React.Fragment>
                                 )
                             })
                         }

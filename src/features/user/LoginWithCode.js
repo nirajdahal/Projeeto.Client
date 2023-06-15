@@ -1,13 +1,10 @@
-import { useState, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import LandingIntro from './LandingIntro'
-import ErrorText from '../../components/Typography/ErrorText'
-import InputText from '../../components/Input/InputText'
-import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon'
-import { useEffect } from 'react'
-import { login, loginWithCode, RESET, sendLoginCode } from './slice/authSlice'
-import { io } from "socket.io-client"
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import InputText from '../../components/Input/InputText'
+import ErrorText from '../../components/Typography/ErrorText'
+import LandingIntro from './LandingIntro'
+import { RESET, loginWithCode, sendLoginCode } from './slice/authSlice'
 function LoginWithCode() {
     const dispatch = useDispatch()
     const navigate = useNavigate()

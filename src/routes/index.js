@@ -9,14 +9,13 @@ const Blank = lazy(() => import('../pages/protected/Blank'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
 const Leads = lazy(() => import('../pages/protected/Leads'))
 const ProjectCreation = lazy(() => import('../pages/protected/ProjectCreation'))
-const Integration = lazy(() => import('../pages/protected/Integration'))
+const StageCreation = lazy(() => import('../pages/protected/StageCreation'))
+const ProjectList = lazy(() => import('../pages/protected/ProjectList'))
 const Team = lazy(() => import('../pages/protected/Team'))
 const ChangePassword = lazy(() => import('../pages/protected/ChangePassword'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
-const DocFeatures = lazy(() => import('../pages/DocFeatures'))
-const DocComponents = lazy(() => import('../pages/DocComponents'))
 const routes = [
   {
     path: '/dashboard', // the url
@@ -52,7 +51,13 @@ const routes = [
     path: '/kanban',
     component: Kanban,
     isAccessible: ['user', 'admin', 'team', 'manager']
-  }, {
+  },
+  {
+    path: '/project-list',
+    component: ProjectList,
+    isAccessible: ['user', 'admin', 'team', 'manager']
+  },
+  {
     path: '/task',
     component: Task,
     isAccessible: ['user', 'admin', 'team', 'manager']
@@ -68,23 +73,13 @@ const routes = [
     isAccessible: ['admin', 'manager']
   },
   {
+    path: '/create-stage',
+    component: StageCreation,
+    isAccessible: ['admin', 'manager', "team"]
+  },
+  {
     path: '/getting-started',
     component: GettingStarted,
-    isAccessible: ['admin', 'manager']
-  },
-  {
-    path: '/features',
-    component: DocFeatures,
-    isAccessible: ['admin', 'manager']
-  },
-  {
-    path: '/components',
-    component: DocComponents,
-    isAccessible: ['admin', 'manager']
-  },
-  {
-    path: '/integration',
-    component: Integration,
     isAccessible: ['admin', 'manager']
   },
   {

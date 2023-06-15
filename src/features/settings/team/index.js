@@ -1,13 +1,10 @@
-import { data } from "autoprefixer"
-import moment from "moment"
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import TitleCard from "../../../components/Cards/TitleCard"
-import socketInstance, { initializeSocket, socketSendUserNotification } from "../../../socket/Socket"
+import { socketSendUserNotification } from "../../../socket/Socket"
 import { showNotification } from '../../common/headerSlice'
-import { sendNotification } from "../../common/slice/NotificationSlice"
-import { getUsers, RESET, upgradeUser } from "../../user/slice/authSlice"
+import { RESET, getUsers, upgradeUser } from "../../user/slice/authSlice"
 const TopSideButtons = () => {
     const dispatch = useDispatch()
     const addNewTeamMember = () => {
@@ -154,14 +151,14 @@ function Team() {
                             </button>
                         </div>
                     </div>
-                    <div className="flex flex-1 justify-center">
+                    <div className="flex flex-1 ">
                         <select className="select select-sm  mt-2 select-bordered  max-w-xs" onChange={async (e) => await setSorting(e)}>
                             <option disabled>Sort By</option>
                             <option value="-createdAt">Date</option>
                             <option value="name">Name</option>
                         </select>
                     </div>
-                    <div className="flex flex-1 justify-center">
+                    <div className="flex flex-1 ">
                         <button className="btn btn-sm btn-error mt-2" onClick={resetFilter}>Reset</button>
                     </div>
                 </div>

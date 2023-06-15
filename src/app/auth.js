@@ -1,11 +1,9 @@
 import axios from "axios"
-import { useDispatch } from "react-redux"
-import { toast } from "react-toastify"
 const checkAuth = () => {
   /*  Getting token value stored in localstorage, if token is not present we will open login page 
       for all internal dashboard routes  */
   const TOKEN = localStorage.getItem("token")
-  const PUBLIC_ROUTES = ["login", "forgot-password", "register", "documentation", "verify", "loginWithCode", "resetPassword"]
+  const PUBLIC_ROUTES = ["login", "forgot-password", "register", "verify", "loginWithCode", "resetPassword"]
   const isPublicPage = PUBLIC_ROUTES.some(r => window.location.href.includes(r))
   if (!TOKEN && !isPublicPage) {
     window.location.href = '/login'

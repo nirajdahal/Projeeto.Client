@@ -1,42 +1,20 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useParams } from "react-router-dom";
+import AddTask from "../../features/projects/components/tasks/addTask";
 import projectService from "../../features/projects/services/ProjectService";
-import { deleteTask, getStages, RESET, updateTask } from "../../features/projects/slice/projectSlice";
+import { deleteTask } from "../../features/projects/slice/projectSlice";
 import { configColor } from "../../features/projects/utils/ConfigColor";
 import authService from "../../features/user/services/UserService";
-import { socketGetUsers, socketSendUserNotification } from "../../socket/Socket";
-import Select from 'react-select';
-import { useRef } from "react";
-import { useNavigate } from "react-router";
-import AddTask from "../../features/projects/components/tasks/addTask";
-import moment from "moment";
+import { socketSendUserNotification } from "../../socket/Socket";
 function InternalPage() {
+    const { id } = useParams();
     const dispatch = useDispatch()
     const currentUser = JSON.parse(localStorage.getItem('user'))
     const [boards, setBoards] = useState([
-        {
-            _id: "board-1",
-            name: "To Do",
-            tasks: [
-                { _id: "task-1", name: "Buy milk" },
-                { _id: "task-2", name: "Buy eggs" },
-            ],
-        },
-        {
-            _id: "board-2",
-            name: "In Progress",
-            tasks: [
-                { _id: "task-3", name: "Do laundry" },
-                { _id: "task-4", name: "Clean room" },
-            ],
-        },
-        {
-            _id: "board-3",
-            name: "Done",
-            tasks: [{ _id: "task-5", name: "Finish project" }],
-        },
     ])
     //board copy is created for tracking original board before searching and filtering
     const [boardCopy, setBoardCopy] = useState([])
@@ -50,7 +28,7 @@ function InternalPage() {
     const navigate = useNavigate();
     useEffect(() => {
         const getStagesFunc = async () => {
-            const response = await projectService.getStages("643d7089186ee682aa473673")
+            const response = await projectService.getStages("648b5bd63dc1b8bda1bacefc")
             setBoards(response.data)
             setBoardCopy(response.data)
             console.log(response.data)
@@ -62,9 +40,9 @@ function InternalPage() {
         getStagesFunc()
         getAllTeamList()
     }, [])
-    useEffect(() => {
-        setBoards(stages)
-    }, [stages])
+    // useEffect(() => {
+    //     setBoards(stages)
+    // }, [stages])
     const handleDragEnd = async ({ source, destination }) => {
         if (!destination) {
             return;
@@ -143,17 +121,18 @@ function InternalPage() {
         setDeleteTaskSetup({})
     };
     const handleAddBoard = () => {
-        const boardName = prompt("Enter board name:");
-        if (boardName) {
-            setBoards((prevState) => [
-                ...prevState,
-                {
-                    _id: `board-${Date.now()}`,
-                    name: boardName,
-                    tasks: [],
-                },
-            ]);
-        }
+        navigate(`/app/create-stage`, { state: "648b5bd63dc1b8bda1bacefc" })
+        console.log(id)
+        // if (boardName) {
+        //     setBoards((prevState) => [
+        //         ...prevState,
+        //         {
+        //             _id: `board-${Date.now()}`,
+        //             name: boardName,
+        //             tasks: [],
+        //         },
+        //     ]);
+        // }
     };
     const extractTeamImage = (assignee) => {
         if (!assignee) {
@@ -301,14 +280,15 @@ function InternalPage() {
                                                 <div
                                                     className={`${snapshot.isDraggingOver ? "bg-base-200" : ""
                                                         } flex-grow p-2 h-80 overflow-y-auto`} {...provided.droppableProps}
-                                                    ref={provided.innerRef}>{board.tasks.map((task, index) => (
+                                                    ref={provided.innerRef}>
+                                                    {board.tasks.map((task, index) => (
                                                         <Draggable
-                                                            key={task._id}
+                                                            key={index}
                                                             draggableId={task._id}
                                                             index={index}
                                                         >
                                                             {(provided, snapshot) => (
-                                                                <div
+                                                                <div key={task._id}
                                                                     className={`${snapshot.isDragging ? "opacity-75" : ""
                                                                         } px-4 py-2 mb-2  rounded-md shadow-lg`}
                                                                     ref={provided.innerRef}
@@ -330,7 +310,7 @@ function InternalPage() {
                                                                                     if (index < 2) {
                                                                                         return (
                                                                                             extractTeamImage(assignee) !== null && <>
-                                                                                                <div className="avatar">
+                                                                                                <div key={assignee.toString() + index} className="avatar">
                                                                                                     <div className="w-5">
                                                                                                         <img src={`${extractTeamImage(assignee)}`} />
                                                                                                     </div>

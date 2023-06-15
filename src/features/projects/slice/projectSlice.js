@@ -4,6 +4,7 @@ import projectService from "../services/ProjectService";
 const initialState = {
     project: {},
     stages: [],
+    stage: {},
     task: {},
     updatedTask: {},
     isError: false,
@@ -42,6 +43,18 @@ export const getStages = createAsyncThunk("project/getStages", async (projectId,
         return thunkAPI.rejectWithValue(message);
     }
 });
+// Create stage
+export const createStage = createAsyncThunk(
+    "project/createStage",
+    async ({ projectId, data }, thunkAPI) => {
+        try {
+            return await projectService.createStage(projectId, data);
+        } catch (error) {
+            const message = setErrorFromResponse(error)
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
 // Update task
 export const addTask = createAsyncThunk(
     "project/addTask",
@@ -115,6 +128,38 @@ const projectSlice = createSlice({
                 toast.success("All tasks")
             })
             .addCase(getStages.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+            .addCase(createStage.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(createStage.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.stage = action.payload.data
+                state.message = action.payload.message
+                toast.success("Stage Created Succesfully")
+            })
+            .addCase(createStage.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+            .addCase(createProject.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(createProject.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.project = action.payload.data
+                state.message = action.payload.message
+                toast.success("Project Created Succesfully")
+            })
+            .addCase(createProject.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

@@ -1,12 +1,11 @@
-import { useState, useRef } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import LandingIntro from './LandingIntro'
-import ErrorText from '../../components/Typography/ErrorText'
-import InputText from '../../components/Input/InputText'
 import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon'
-import { forgotPassword, RESET, resetPassword } from './slice/authSlice'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import InputText from '../../components/Input/InputText'
+import ErrorText from '../../components/Typography/ErrorText'
+import LandingIntro from './LandingIntro'
+import { RESET, resetPassword } from './slice/authSlice'
 function ResetPassword() {
     const dispatch = useDispatch()
     const { resetToken } = useParams()

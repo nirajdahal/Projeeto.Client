@@ -7,7 +7,7 @@ import MoonIcon from '@heroicons/react/24/outline/MoonIcon'
 import SunIcon from '@heroicons/react/24/outline/SunIcon'
 import { openRightDrawer } from '../features/common/rightDrawerSlice';
 import { RIGHT_DRAWER_TYPES } from '../utils/globalConstantUtil'
-import { NavLink, Routes, Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { RESET } from '../features/user/slice/authSlice'
 import { getNotifications, readNotifications } from '../features/common/slice/NotificationSlice'
 import { initializeSocket, socketGetNotifications } from '../socket/Socket'

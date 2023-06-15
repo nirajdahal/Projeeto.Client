@@ -12,6 +12,11 @@ const getAllProjects = async (id) => {
     const response = await axios.get(API_URL + "/projects");
     return response.data;
 }
+// Get getProjects 
+const getAllTeamProjects = async (id) => {
+    const response = await axios.get(API_URL + "/projects/user");
+    return response.data;
+}
 // Create project
 const createProject = async (data) => {
     const response = await axios.post(API_URL + "/projects", data);
@@ -21,6 +26,10 @@ const createProject = async (data) => {
 // Get getStagesByProjectId 
 const getStages = async (id) => {
     const response = await axios.get(API_URL + "/projects/" + id + '/stages');
+    return response.data;
+}
+const createStage = async (id, data) => {
+    const response = await axios.post(API_URL + "/projects/" + id + '/stages', data);
     return response.data;
 }
 //Tasks
@@ -64,6 +73,8 @@ const projectService = {
     updateTask,
     deleteTask,
     createTask,
-    getTaskById
+    getTaskById,
+    getAllTeamProjects,
+    createStage
 };
 export default projectService;

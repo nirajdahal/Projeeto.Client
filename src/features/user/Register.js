@@ -1,12 +1,10 @@
-import { useState, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import LandingIntro from './LandingIntro'
-import ErrorText from '../../components/Typography/ErrorText'
-import InputText from '../../components/Input/InputText'
-import { showNotification } from '../common/headerSlice'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { register, RESET, sendVerificationEmail } from './slice/authSlice'
-import { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import InputText from '../../components/Input/InputText'
+import ErrorText from '../../components/Typography/ErrorText'
+import LandingIntro from './LandingIntro'
+import { RESET, register } from './slice/authSlice'
 function Register() {
     const dispatch = useDispatch()
     const navigate = useNavigate();
@@ -48,9 +46,6 @@ function Register() {
         setErrorMessage("")
         setRegisterObj({ ...registerObj, [updateType]: value })
     }
-    const handleClick = () => {
-        window.location.href = '/app/welcome'
-    }
     return (
         <div className="min-h-screen bg-base-200 flex items-center">
             <div className="card mx-auto w-full max-w-5xl  shadow-xl">
@@ -59,7 +54,6 @@ function Register() {
                         <LandingIntro />
                     </div>
                     <div className='py-24 px-10'>
-                        <button onClick={handleClick}>Test</button>
                         <h2 className='text-2xl font-semibold mb-2 text-center'>Register</h2>
                         <form onSubmit={(e) => submitForm(e)}>
                             <div className="mb-4">

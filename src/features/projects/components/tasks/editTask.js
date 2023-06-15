@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { updateTask } from "../../../../features/projects/slice/projectSlice";
-import { configColor } from "../../../../features/projects/utils/ConfigColor";
-import authService from "../../../../features/user/services/UserService";
+import { updateTask } from "../../slice/projectSlice";
+import { configColor } from "../../utils/ConfigColor";
+import authService from "../../../user/services/UserService";
 import { socketGetUsers, socketSendUserNotification } from "../../../../socket/Socket";
 import Select from 'react-select';
 import { useLocation, useNavigate } from "react-router";
-import { RESET } from "../../../projects/slice/projectSlice";
+import { RESET } from "../../slice/projectSlice";
 function EditTask() {
     const dispatch = useDispatch()
     const navigate = useNavigate();

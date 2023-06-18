@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import authService from "../../../../features/user/services/UserService";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import Select from 'react-select';
-import { useLocation, useNavigate } from "react-router";
+import authService from "../../../../features/user/services/UserService";
 import { RESET_TASK } from "../../../projects/slice/projectSlice";
 import { addTask } from "../../slice/projectSlice";
-import { socketSendUserNotification } from "../../../../socket/Socket";
 function AddTask({ closeModal, stageId, modifyBoard }) {
     const [allTeamMembers, setAllTeamMembers] = useState(null)
     const [selectedType, setSelectedType] = useState('')
@@ -26,7 +24,7 @@ function AddTask({ closeModal, stageId, modifyBoard }) {
         if (task && isSuccess) {
             // setSelectedTask(updatedTask)
             console.log("the task has been updated", task)
-            modifyBoard(stageId)
+            modifyBoard(stageId, task)
             dispatch(RESET_TASK())
             closeModal(task)
         }
@@ -63,7 +61,7 @@ function AddTask({ closeModal, stageId, modifyBoard }) {
                     <div className=" cursor-auto min-h-screen ">
                         <div className=" grid gap-4 h-100 modal-box w-12/12 max-w-5xl p-8">
                             <label onClick={() => closeModal()} htmlFor="editTask" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                            <h3 className="font-bold text-lg">Edit Task</h3>
+                            <h3 className="font-bold text-lg">Add Task</h3>
                             <div className={`form-control `}>
                                 <label className="label">
                                     <span className={"label-text text-base-content "}>Name</span>

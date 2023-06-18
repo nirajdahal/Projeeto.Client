@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { useParams } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import AddTask from "../../features/projects/components/tasks/addTask";
 import projectService from "../../features/projects/services/ProjectService";
 import { deleteTask } from "../../features/projects/slice/projectSlice";
@@ -11,7 +11,8 @@ import { configColor } from "../../features/projects/utils/ConfigColor";
 import authService from "../../features/user/services/UserService";
 import { socketSendUserNotification } from "../../socket/Socket";
 function InternalPage() {
-    const { id } = useParams();
+    const location = useLocation()
+    const projectToShow = location.state
     const dispatch = useDispatch()
     const currentUser = JSON.parse(localStorage.getItem('user'))
     const [boards, setBoards] = useState([
@@ -27,8 +28,11 @@ function InternalPage() {
     )
     const navigate = useNavigate();
     useEffect(() => {
+        if (!projectToShow) {
+            window.location.href = "/"
+        }
         const getStagesFunc = async () => {
-            const response = await projectService.getStages("648b5bd63dc1b8bda1bacefc")
+            const response = await projectService.getStages(projectToShow)
             setBoards(response.data)
             setBoardCopy(response.data)
             console.log(response.data)
@@ -121,18 +125,7 @@ function InternalPage() {
         setDeleteTaskSetup({})
     };
     const handleAddBoard = () => {
-        navigate(`/app/create-stage`, { state: "648b5bd63dc1b8bda1bacefc" })
-        console.log(id)
-        // if (boardName) {
-        //     setBoards((prevState) => [
-        //         ...prevState,
-        //         {
-        //             _id: `board-${Date.now()}`,
-        //             name: boardName,
-        //             tasks: [],
-        //         },
-        //     ]);
-        // }
+        navigate(`/app/create-stage`, { state: projectToShow })
     };
     const extractTeamImage = (assignee) => {
         if (!assignee) {
@@ -283,7 +276,7 @@ function InternalPage() {
                                                     ref={provided.innerRef}>
                                                     {board.tasks.map((task, index) => (
                                                         <Draggable
-                                                            key={index}
+                                                            key={task._id + index}
                                                             draggableId={task._id}
                                                             index={index}
                                                         >

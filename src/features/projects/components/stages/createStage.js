@@ -1,13 +1,15 @@
-import React, { useRef, useState } from 'react'
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { RESET, createStage } from '../../slice/projectSlice'
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { RESET, createStage } from '../../slice/projectSlice';
 const CreateStage = () => {
     const location = useLocation()
-    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const projectToAddStageInto = location.state
+    if (!projectToAddStageInto) {
+        window.location.href = "/"
+    }
+    const dispatch = useDispatch()
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const colorRef = useRef('#FFFFFF');
@@ -15,15 +17,12 @@ const CreateStage = () => {
         (state) => state.project
     )
     useEffect(() => {
-        // if (!projectToAddStageInto) {
-        //     window.location.href = "/"
-        // }
         console.log(projectToAddStageInto)
     }, [])
     useEffect(() => {
         if (isSuccess && stage) {
             dispatch(RESET())
-            window.location.href = `/app/kanban/${projectToAddStageInto}`
+            navigate(`/app/kanban`, { state: projectToAddStageInto })
         }
     }, [stage])
     const handleClick = () => {
@@ -36,25 +35,27 @@ const CreateStage = () => {
     }
     return (
         <>
-            <div className="modal-box relative">
-                <label htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                <div className={`form-control `}>
-                    <label className="label">
-                        <span className={"label-text text-base-content "}>Name</span>
-                    </label>
-                    <input onChange={(e) => setName(e.target.value)} type='text' className="input  input-bordered w-full " />
+            {projectToAddStageInto &&
+                <div className="modal-box relative">
+                    <label onClick={() => navigate(`/app/kanban`, { state: projectToAddStageInto })} htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                    <div className={`form-control `}>
+                        <label className="label">
+                            <span className={"label-text text-base-content "}>Name</span>
+                        </label>
+                        <input onChange={(e) => setName(e.target.value)} type='text' className="input  input-bordered w-full " />
+                    </div>
+                    <div className={`form-control `}>
+                        <label className="label">
+                            <span className={"label-text text-base-content "}>Description</span>
+                        </label>
+                        <textarea onChange={(e) => setDescription(e.target.value)} type='text' className="textarea textarea-bordered  " />
+                    </div>
+                    <div className='form-control'>
+                    </div><label className="label"><span className={"label-text text-base-content "}>Choose stage color:</span></label>
+                    <input type="color" className='input input-bordered w-full cursor-pointer' onChange={(e) => colorRef.current = e.target.value} />
+                    <div className='form-control mt-4'> <button disabled={!name.trim().length > 0} className='btn btn-dark' onClick={handleClick}>Create</button></div>
                 </div>
-                <div className={`form-control `}>
-                    <label className="label">
-                        <span className={"label-text text-base-content "}>Description</span>
-                    </label>
-                    <textarea onChange={(e) => setDescription(e.target.value)} type='text' className="textarea textarea-bordered  " />
-                </div>
-                <div className='form-control'>
-                </div><label className="label"><span className={"label-text text-base-content "}>Choose stage color:</span></label>
-                <input type="color" className='input input-bordered w-full cursor-pointer' onChange={(e) => colorRef.current = e.target.value} />
-                <div className='form-control mt-4'> <button disabled={!name.trim().length > 0} className='btn btn-dark' onClick={handleClick}>Create</button></div>
-            </div>
+            }
         </>
     )
 }

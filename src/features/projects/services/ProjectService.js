@@ -13,13 +13,23 @@ const getAllProjects = async (id) => {
     return response.data;
 }
 // Get getProjects 
-const getAllTeamProjects = async (id) => {
+const getAllTeamProjects = async () => {
     const response = await axios.get(API_URL + "/projects/user");
     return response.data;
 }
 // Create project
 const createProject = async (data) => {
     const response = await axios.post(API_URL + "/projects", data);
+    return response.data;
+}
+// Edit project
+const editProject = async (id, data) => {
+    const response = await axios.put(API_URL + "/projects/" + id, data);
+    return response.data;
+}
+// Delete Project 
+const deleteProject = async (id) => {
+    const response = await axios.delete(API_URL + "/projects" + `/${id}`);
     return response.data;
 }
 //Stages
@@ -75,6 +85,8 @@ const projectService = {
     createTask,
     getTaskById,
     getAllTeamProjects,
-    createStage
+    createStage,
+    deleteProject,
+    editProject
 };
 export default projectService;

@@ -1,12 +1,11 @@
-import Header from "./Header"
-import pagesRoutes from '../routes/index'
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
-import routes from '../routes'
-import React, { Suspense, lazy } from 'react'
-import SuspenseContent from "./SuspenseContent"
+import jwt_decode from "jwt-decode"
+import React, { Suspense, lazy, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import jwt_decode from "jwt-decode";
-import { useEffect, useRef } from "react"
+import { Route, Routes, useLocation } from 'react-router-dom'
+import routes from '../routes'
+import pagesRoutes from '../routes/index'
+import Header from "./Header"
+import SuspenseContent from "./SuspenseContent"
 const Page404 = lazy(() => import('../pages/protected/404'))
 const token = localStorage.getItem('token')
 function PageContent() {
@@ -19,11 +18,17 @@ function PageContent() {
         return regexMatch ? regexMatch[1] || '' : '';
     };
     currentPath = extractSubstring(currentPath)
-    const accesibleRoles = getRouteWithCurrentPath(currentPath)[0].isAccessible
-    const decodedToken = jwt_decode(token)
-    const isAccessible = checkIsAccessibleByRole(accesibleRoles, decodedToken.role)
-    if (!isAccessible) {
-        window.location.href = "/app/welcome"
+    let accesibleRoles = getRouteWithCurrentPath(currentPath)[0]
+    if (accesibleRoles === undefined) {
+        window.location.href = "/app/404"
+    }
+    else {
+        accesibleRoles = accesibleRoles.isAccessible
+        const decodedToken = jwt_decode(token)
+        const isAccessible = checkIsAccessibleByRole(accesibleRoles, decodedToken.role)
+        if (!isAccessible) {
+            window.location.href = "/app/welcome"
+        }
     }
     function getRouteWithCurrentPath(path) {
         return pagesRoutes.filter(route => route.path === path);

@@ -1,18 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import headerSlice from '../features/common/headerSlice'
-import modalSlice from '../features/common/modalSlice'
 import rightDrawerSlice from '../features/common/rightDrawerSlice'
-import leadsSlice from '../features/leads/leadSlice'
-import authReducer from "../features/user/slice/authSlice"
 import notificationReducer from "../features/common/slice/NotificationSlice"
 import projectSlice from '../features/projects/slice/projectSlice'
+import authReducer from "../features/user/slice/authSlice"
 const combinedReducer = {
   header: headerSlice,
   auth: authReducer,
   notification: notificationReducer,
   rightDrawer: rightDrawerSlice,
-  modal: modalSlice,
-  lead: leadsSlice,
   project: projectSlice
 }
 export default configureStore({

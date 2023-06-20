@@ -5,7 +5,6 @@ const Welcome = lazy(() => import('../pages/protected/Welcome'))
 const Kanban = lazy(() => import('../pages/protected/Kanban'))
 const Task = lazy(() => import('../pages/protected/Task'))
 const Page404 = lazy(() => import('../pages/protected/404'))
-const Charts = lazy(() => import('../pages/protected/Charts'))
 const ProjectCreation = lazy(() => import('../pages/protected/ProjectCreation'))
 const ProjectEdit = lazy(() => import('../pages/protected/ProjectEdit'))
 const StageCreation = lazy(() => import('../pages/protected/StageCreation'))
@@ -73,11 +72,6 @@ const routes = [
   {
     path: '/getting-started',
     component: GettingStarted,
-    isAccessible: ['admin', 'manager']
-  },
-  {
-    path: '/charts',
-    component: Charts,
     isAccessible: ['admin', 'manager']
   },
   {

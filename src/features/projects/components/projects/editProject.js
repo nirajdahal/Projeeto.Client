@@ -5,6 +5,7 @@ import TitleCard from "../../../../components/Cards/TitleCard";
 import authService from "../../../user/services/UserService";
 import { RESET, editProject } from "../../slice/projectSlice";
 function EditProject() {
+    const currentUser = JSON.parse(localStorage.getItem('user'))
     const location = useLocation()
     const navigate = useNavigate()
     const projectToEdit = location.state
@@ -20,11 +21,13 @@ function EditProject() {
     const [selectedManager, setSelectedManager] = useState("")
     const [managers, setManagers] = useState([])
     useEffect(() => {
-        const getManagerList = async () => {
-            const data = await authService.getManagers();
-            setManagers(data.data)
+        if (currentUser.role === 'admin') {
+            const getManagerList = async () => {
+                const data = await authService.getManagers();
+                setManagers(data.data)
+            }
+            getManagerList()
         }
-        getManagerList()
     }, [])
     useEffect(() => {
         if (isSuccess && project) {
@@ -35,6 +38,7 @@ function EditProject() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = { name, description, manager: selectedManager }
+        console.log(data)
         await dispatch(editProject({ paramId: projectToEdit._id, data }))
     }
     return (
@@ -72,7 +76,8 @@ function EditProject() {
                             </div>
                         </div>
                     </div>
-                    {managers &&
+                    {(currentUser.role === 'admin' && managers)
+                        &&
                         <div className="form-control mt-4">
                             <select
                                 className="select select-bordered"

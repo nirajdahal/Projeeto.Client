@@ -8,6 +8,7 @@ const AllProjects = () => {
     const navigate = useNavigate()
     const [projectToDelete, setProjectToDelete] = useState("")
     const [projectList, setProjectList] = useState(null)
+    const [projectListSearch, setProjectListSearch] = useState(null)
     const { projects, isSuccess, isProjectDelete } = useSelector(
         (state) => state.project
     )
@@ -18,6 +19,7 @@ const AllProjects = () => {
         if (isSuccess && projects) {
             dispatch(RESET())
             setProjectList(projects)
+            setProjectListSearch(projects)
             console.log(projects)
         }
     }, [projects])
@@ -36,13 +38,28 @@ const AllProjects = () => {
     const handleEdit = (project) => {
         navigate(`/app/edit-project`, { state: project })
     }
+    const handleSearch = (val) => {
+        const originalProject = projectListSearch
+        if (val.length > 0) {
+            const filteredProject = originalProject.filter(project =>
+                project.name.toLowerCase().includes(val.toLowerCase())
+            );
+            setProjectList(filteredProject)
+        }
+        else {
+            setProjectList(originalProject)
+        }
+    }
     return (
         <>
+            <div className='flex justify-center'>
+                <input className='input' type='text' placeholder='Search Project' onChange={(e) => handleSearch(e.target.value)} />
+            </div>
             {(projectList !== null && projectList.length > 0) &&
                 <>
                     {
                         projectList.map((project) =>
-                            <div key={project._id} className="stats shadow m-2">
+                            <div key={project._id} className="flex justify-center stats shadow m-2">
                                 <div className="stat ">
                                     <div className="stat-figure text-success">
                                         <div className="avatar ">
@@ -81,8 +98,8 @@ const AllProjects = () => {
                 </>
             }
             {(projectList !== null && projectList.length === 0) &&
-                <div className='flex justify-center'>
-                    <h3>You are not assigned in any projects</h3>
+                <div className='flex justify-center mt-5 pt-5'>
+                    <h2>No Projects</h2>
                 </div>
             }
         </>

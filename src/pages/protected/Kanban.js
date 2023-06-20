@@ -246,11 +246,11 @@ function InternalPage() {
                         </div>
                     </div>
                     <div className="min-h-screen bg-base-100">
-                        <header className=" shadow-lg py-1 px-8">
+                        {(currentUser.role === 'manager' || currentUser.role === 'admin') && <header className=" shadow-lg py-1 px-8">
                             <button className="btn btn-base" onClick={handleAddBoard}>
                                 + Add Board
                             </button>
-                        </header>
+                        </header>}
                         <div className="flex p-6 overflow-x-auto ">
                             <DragDropContext onDragEnd={handleDragEnd}>
                                 {boards.map((board) => (

@@ -1,5 +1,4 @@
 /** Icons are imported separatly to reduce build time */
-import ChartBarIcon from '@heroicons/react/24/outline/ChartBarIcon'
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
 import Squares2X2Icon from '@heroicons/react/24/outline/Squares2X2Icon'
 import TicketIcon from '@heroicons/react/24/outline/TicketIcon'
@@ -13,12 +12,6 @@ const routes = [
     path: '/app/dashboard',
     icon: <Squares2X2Icon className={iconClasses} />,
     name: 'Dashboard',
-    isAccessible: ['admin', 'manager', 'team']
-  },
-  {
-    path: '/app/charts', // url
-    icon: <ChartBarIcon className={iconClasses} />,
-    name: 'Charts', // name that appear in Sidebar
     isAccessible: ['admin', 'manager', 'team']
   },
   {

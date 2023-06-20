@@ -10,7 +10,6 @@ export const initializeSocket = (token, user) => {
     socketInstance.on('disconnect', () => {
         console.log('Disconnected from server!');
     });
-    console.log("i am here")
 }
 export const socketSendUserNotification = (userToSend, type) => {
     socketInstance.emit("send-notification", userToSend, type)

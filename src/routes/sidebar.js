@@ -1,4 +1,5 @@
 /** Icons are imported separatly to reduce build time */
+import EnvelopeIcon from '@heroicons/react/24/outline/EnvelopeIcon'
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
 import Squares2X2Icon from '@heroicons/react/24/outline/Squares2X2Icon'
 import TicketIcon from '@heroicons/react/24/outline/TicketIcon'
@@ -12,7 +13,13 @@ const routes = [
     path: '/app/dashboard',
     icon: <Squares2X2Icon className={iconClasses} />,
     name: 'Dashboard',
-    isAccessible: ['admin', 'manager', 'team']
+    isAccessible: ['admin']
+  },
+  {
+    path: '/app/email',
+    icon: <EnvelopeIcon className={iconClasses} />,
+    name: 'Send Email',
+    isAccessible: ['admin']
   },
   {
     path: '/app/project-list',

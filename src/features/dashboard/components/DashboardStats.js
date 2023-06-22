@@ -18,7 +18,7 @@ function DashboardStats({ }) {
             setUserCount(data.data.userCount)
         }
         socketGetUsers((data) => {
-            setActiveUsersCount(data.count)
+            setActiveUsersCount(data.length)
         })
         getCounts()
     }, [])
@@ -45,7 +45,7 @@ function DashboardStats({ }) {
             <div className="stat">
                 <div className="stat-figure text-secondary"><UsersIcon className='w-8 h-8' /></div>
                 <div className="stat-title">Online Users</div>
-                <div className="stat-value text-success">3</div>
+                <div className="stat-value text-success">{activeUsersCount}</div>
                 {/* <div className={"stat-desc  " + getDescStyle()}>{description}</div> */}
             </div>
         </div>

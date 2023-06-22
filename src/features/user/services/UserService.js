@@ -91,6 +91,11 @@ const getTeamMembers = async () => {
     const response = await axios.get(API_URL + "getTeam");
     return response.data;
 };
+//Get Memebers by Ids
+const getMembers = async (ids) => {
+    const response = await axios.post(API_URL + "members", { ids });
+    return response.data;
+};
 // Delete User
 const deleteUser = async (id) => {
     const response = await axios.delete(API_URL + id);
@@ -116,6 +121,11 @@ const loginWithGoogle = async (userToken) => {
     const response = await axios.post(API_URL + "google/callback", userToken);
     return response.data;
 };
+// Send Email to users
+const sendEmailToUsers = async (data) => {
+    const response = await axios.post(API_URL + "sendEmail", data);
+    return response.data;
+};
 const authService = {
     register,
     login,
@@ -129,6 +139,7 @@ const authService = {
     forgotPassword,
     resetPassword,
     getUsers,
+    getMembers,
     getManagers,
     getTeamMembers,
     deleteUser,
@@ -136,5 +147,6 @@ const authService = {
     sendLoginCode,
     loginWithCode,
     loginWithGoogle,
+    sendEmailToUsers,
 };
 export default authService;

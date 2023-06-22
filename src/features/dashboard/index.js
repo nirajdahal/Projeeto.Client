@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { showNotification } from '../common/headerSlice'
+import TitleCard from '../../components/Cards/TitleCard'
+import { socketGetUsers } from '../../socket/Socket'
+import authService from '../user/services/UserService'
 import BarChart from './components/BarChart'
 import DashboardStats from './components/DashboardStats'
 import DoughnutChart from './components/DoughnutChart'
@@ -11,6 +13,7 @@ function Dashboard() {
     const [priorityData, setPriorityData] = useState(null)
     const [typeData, setTypeData] = useState(null)
     const [projectManagerData, setProjectManagerData] = useState(null)
+    const [activeUsers, setActiveUsers] = useState(null)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const handleProjectData = (val) => {
@@ -30,18 +33,39 @@ function Dashboard() {
             const data = await dashboardService.getAllTaskTypes()
             setTypeData(data.data)
         }
+        socketGetUsers((data) => {
+            const filteredData = data.map((val) => val.userId)
+            console.log(filteredData)
+            const getActiveUserInfo = async () => {
+                const userList = await authService.getMembers(filteredData)
+                console.log("userList", userList)
+                setActiveUsers(userList.data)
+            }
+            getActiveUserInfo()
+        })
         getProjectWithManager()
         getPriorities()
         getTypes()
     }, [])
-    const updateDashboardPeriod = (newRange) => {
-        // Dashboard range changed, write code to refresh your values
-        dispatch(showNotification({ message: `Period updated to ${newRange}`, status: 1 }))
-    }
     return (
         <>
             <div className="grid lg:grid-cols-1 mt-8  grid-cols-1 gap-6">
                 <DashboardStats />
+            </div>
+            <div className="grid lg:grid-cols-1 mt-8 grid-cols-1 gap-6">
+                <TitleCard title='Online Users'>
+                    <div className="flex">
+                        {activeUsers && activeUsers.map((user) => (
+                            <div className="tooltip" data-tip={user.name}>
+                                <div className="avatar online m-1">
+                                    <div className="w-16 rounded-full">
+                                        <img src={`${user.photo}`} />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </TitleCard>
             </div>
             <div className="grid lg:grid-cols-1 mt-4  grid-cols-1 gap-6">
                 {projectManagerData && <UserChannels data={projectManagerData} handleSubmit={handleProjectData} title='All Projects' />}</div>
